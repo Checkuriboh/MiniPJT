@@ -83,20 +83,20 @@ public class Product {
 				+ "[prodName]" + prodName + "[prodNo]" + prodNo + "[proTranCode]" + proTranCode;
 	}
 	
-//	public String getProTranCodeStr()
-//	{
-//		Properties ptcStr = new Properties();
-//		ptcStr.setProperty("1", "구매완료");
-//		ptcStr.setProperty("2", "배송중");
-//		ptcStr.setProperty("3", "배송완료"); // 재고 없음
-//		
-//		if (this.getProTranCode() == null) {
-//			return "판매중";
-//		}
-//		else {
-//			return ptcStr.getProperty(this.getProTranCode(), "-");
-//		}
-//	}
+	public String getProTranCodeStr()
+	{
+		Properties ptcStr = new Properties();
+		ptcStr.setProperty("1", "구매완료");
+		ptcStr.setProperty("2", "배송중");
+		ptcStr.setProperty("3", "배송완료"); // 재고 없음
+		
+		if (this.getProTranCode() == null) {
+			return "판매중";
+		}
+		else {
+			return ptcStr.getProperty(this.getProTranCode(), "-");
+		}
+	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// JSON ==> Domain Object  Binding을 위해 추가된 부분
