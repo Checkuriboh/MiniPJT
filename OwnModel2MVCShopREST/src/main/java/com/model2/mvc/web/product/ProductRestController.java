@@ -1,4 +1,4 @@
-package com.model2.mvc.web.user;
+package com.model2.mvc.web.product;
 
 import java.util.Map;
 
@@ -19,57 +19,42 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.User;
+import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.user.UserService;
 
 
-//==> 회원관리 RestController
+//==> 상품관리 RestController
 @RestController
-@RequestMapping("/user/*")
-public class UserRestController {
+@RequestMapping("/product/*")
+public class ProductRestController {
 	
 	///Field
 	@Autowired
-	@Qualifier("userServiceImpl")
-	private UserService userService;
+	@Qualifier("productServiceImpl")
+	private ProductService productService;
 	
 	
 	///Constructor
-	public UserRestController(){
+	public ProductRestController(){
 		System.out.println(this.getClass());
 	}
 	
 	
 	///Method
 	
-	//==> userId를 받아 User 검색 및 반환
-	@RequestMapping(value="json/getUser/{userId}", method=RequestMethod.GET)
-	public User getUser( @PathVariable String userId ) throws Exception
+	//==> prodNo를 받아 Product 검색 및 반환
+	@RequestMapping(value="json/getProduct/{prodNo}", method=RequestMethod.GET)
+	public Product getProduct( @PathVariable int prodNo ) throws Exception
 	{
-		System.out.println("/user/json/getUser : GET");
+		System.out.println("/product/json/getProduct : GET");
+		
+		Product product = productService.getProduct(prodNo);
+		product.setProTranCode("1");
 		
 		//Business Logic
-		return userService.getUser(userId);
-	}
-
-	//==> User(id,pwd) 객체를 받아 로그인 
-	@RequestMapping(value="json/login", method=RequestMethod.POST)
-	public User login( 	@RequestBody User user,
-						HttpSession session ) throws Exception
-	{
-		System.out.println("/user/json/login : POST");
-		
-		//Business Logic
-		System.out.println(":: " + user);
-		User dbUser = userService.getUser(user.getUserId());
-		
-		if ( dbUser.getPassword().equals(user.getPassword()) )
-		{
-			session.setAttribute("user", dbUser);
-			return dbUser;
-		}
-		
-		return null;
+		return productService.getProduct(prodNo);
 	}
 	
 }
