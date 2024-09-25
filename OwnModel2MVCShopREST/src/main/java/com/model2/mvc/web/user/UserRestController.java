@@ -38,28 +38,32 @@ public class UserRestController {
 		System.out.println(this.getClass());
 	}
 	
-	@RequestMapping( value="json/getUser/{userId}", method=RequestMethod.GET )
-	public User getUser( @PathVariable String userId ) throws Exception{
-		
+	@RequestMapping(value="json/getUser/{userId}", method=RequestMethod.GET)
+	public User getUser( @PathVariable String userId ) throws Exception
+	{
 		System.out.println("/user/json/getUser : GET");
 		
 		//Business Logic
 		return userService.getUser(userId);
 	}
 
-	@RequestMapping( value="json/login", method=RequestMethod.POST )
-	public User login(	@RequestBody User user,
-									HttpSession session ) throws Exception{
-	
+	@RequestMapping(value="json/login", method=RequestMethod.POST)
+	public User login( 	@RequestBody User user,
+						HttpSession session ) throws Exception
+	{
 		System.out.println("/user/json/login : POST");
-		//Business Logic
-		System.out.println("::"+user);
-		User dbUser=userService.getUser(user.getUserId());
 		
-		if( user.getPassword().equals(dbUser.getPassword())){
+		//Business Logic
+		System.out.println("::" + user);
+		User dbUser = userService.getUser(user.getUserId());
+		
+		if ( dbUser.getPassword().equals(user.getPassword()) )
+		{
 			session.setAttribute("user", dbUser);
+			return dbUser;
 		}
 		
-		return dbUser;
+		return null;
 	}
+	
 }
