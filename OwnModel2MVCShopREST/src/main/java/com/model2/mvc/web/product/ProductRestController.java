@@ -50,9 +50,6 @@ public class ProductRestController {
 	{
 		System.out.println("/product/json/getProduct : GET");
 		
-		Product product = productService.getProduct(prodNo);
-		product.setProTranCode("1");
-		
 		//Business Logic
 		return productService.getProduct(prodNo);
 	}
