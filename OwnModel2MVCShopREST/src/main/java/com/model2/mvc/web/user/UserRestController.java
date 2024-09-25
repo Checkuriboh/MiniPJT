@@ -38,6 +38,7 @@ public class UserRestController {
 		System.out.println(this.getClass());
 	}
 	
+	//==> userId를 받아 User 검색 및 반환
 	@RequestMapping(value="json/getUser/{userId}", method=RequestMethod.GET)
 	public User getUser( @PathVariable String userId ) throws Exception
 	{
@@ -47,6 +48,7 @@ public class UserRestController {
 		return userService.getUser(userId);
 	}
 
+	//==> User(id,pwd) 객체를 받아 로그인 
 	@RequestMapping(value="json/login", method=RequestMethod.POST)
 	public User login( 	@RequestBody User user,
 						HttpSession session ) throws Exception
