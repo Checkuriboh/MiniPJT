@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
         
-    <wb-module deploy-name="OwnModel2MVCShop07">
+    <wb-module deploy-name="OwnModel2MVCShopREST">
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         
@@ -10,7 +10,7 @@
         
         <property name="context-root" value="/"/>
         
-        <property name="java-output-path" value="/OwnModel2MVCShop07/build/classes"/>
+        <property name="java-output-path" value="/OwnModel2MVCShopREST/build/classes"/>
     
     </wb-module>
     
