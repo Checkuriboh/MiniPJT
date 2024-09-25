@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 
-public class DateUtil {
+public class StringUtil {
 	
 	///Field
 	
@@ -18,7 +18,7 @@ public class DateUtil {
 			return "";
 		}
 		else {
-			return DateUtil.toDateStr(date.toString(), len);
+			return StringUtil.toDateStr(date.toString(), len);
 		}
 	}
 	
@@ -51,8 +51,19 @@ public class DateUtil {
 			return null;
 		}
 		else {
-			String date = DateUtil.toDateStr(dateStr, 10);
+			String date = StringUtil.toDateStr(dateStr, 10);
 			return Date.valueOf(date);
 		}
 	}
+	
+	public static String trim(String str)
+	{
+		if (str == null) {
+			return null;
+		}
+		else {
+			return str.trim();
+		}
+	}
+	
 }

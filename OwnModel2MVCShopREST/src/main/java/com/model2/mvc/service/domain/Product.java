@@ -3,7 +3,7 @@ package com.model2.mvc.service.domain;
 import java.sql.Date;
 import java.util.Properties;
 
-import com.model2.mvc.common.util.DateUtil;
+import com.model2.mvc.common.util.StringUtil;
 
 public class Product {
 
@@ -16,7 +16,12 @@ public class Product {
 	private Date regDate;
 	private String proTranCode;
 	// null:판매중 1:판매완료 2:배송중 3:배송완료
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	private String regDateString;
+	// JSON ==> Domain Object  Binding을 위해 추가된 부분
 
+	
 	public Product() {
 	}
 
@@ -24,7 +29,7 @@ public class Product {
 		return proTranCode;
 	}
 	public void setProTranCode(String proTranCode) {
-		this.proTranCode = proTranCode.trim();
+		this.proTranCode = StringUtil.trim(proTranCode);
 	}
 	public String getFileName() {
 		return fileName;
@@ -36,7 +41,7 @@ public class Product {
 		return manuDate;
 	}
 	public void setManuDate(String manuDate) {
-		this.manuDate = DateUtil.toDateStr(manuDate, 8);
+		this.manuDate = StringUtil.toDateStr(manuDate, 8);
 	}
 	public int getPrice() {
 		return price;
@@ -67,6 +72,8 @@ public class Product {
 	}
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
+		// JSON ==> Domain Object  Binding을 위해 추가된 부분
+		this.regDateString = StringUtil.toDateStr(manuDate, 10);
 	}
 
 	// Override
@@ -76,19 +83,29 @@ public class Product {
 				+ "[prodName]" + prodName + "[prodNo]" + prodNo + "[proTranCode]" + proTranCode;
 	}
 	
-	public String getProTranCodeStr()
-	{
-		Properties ptcStr = new Properties();
-		ptcStr.setProperty("1", "구매완료");
-		ptcStr.setProperty("2", "배송중");
-		ptcStr.setProperty("3", "배송완료"); // 재고 없음
-		
-		if (this.getProTranCode() == null) {
-			return "판매중";
-		}
-		else {
-			return ptcStr.getProperty(this.getProTranCode(), "-");
-		}
+//	public String getProTranCodeStr()
+//	{
+//		Properties ptcStr = new Properties();
+//		ptcStr.setProperty("1", "구매완료");
+//		ptcStr.setProperty("2", "배송중");
+//		ptcStr.setProperty("3", "배송완료"); // 재고 없음
+//		
+//		if (this.getProTranCode() == null) {
+//			return "판매중";
+//		}
+//		else {
+//			return ptcStr.getProperty(this.getProTranCode(), "-");
+//		}
+//	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// JSON ==> Domain Object  Binding을 위해 추가된 부분
+	public String getRegDateString() {
+		return regDateString;
+	}
+
+	public void setRegDateString(String regDateString) {
+		this.regDateString = regDateString;
 	}
 	
 }

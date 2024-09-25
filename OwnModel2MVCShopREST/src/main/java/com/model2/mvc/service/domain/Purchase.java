@@ -3,7 +3,7 @@ package com.model2.mvc.service.domain;
 import java.sql.Date;
 import java.util.Properties;
 
-import com.model2.mvc.common.util.DateUtil;
+import com.model2.mvc.common.util.StringUtil;
 
 public class Purchase {
 
@@ -18,6 +18,11 @@ public class Purchase {
 	private String tranCode;
 	private Date orderDate;
 	private String divyDate;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	private String orderDateString;
+	// JSON ==> Domain Object  Binding을 위해 추가된 부분
+	
 	
 	public Purchase(){
 	}
@@ -38,7 +43,7 @@ public class Purchase {
 		return divyDate;
 	}
 	public void setDivyDate(String divyDate) {
-		this.divyDate = DateUtil.toDateStr(divyDate, 10);
+		this.divyDate = StringUtil.toDateStr(divyDate, 10);
 	}
 	public String getDivyRequest() {
 		return divyRequest;
@@ -51,6 +56,8 @@ public class Purchase {
 	}
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+		// JSON ==> Domain Object  Binding을 위해 추가된 부분
+		this.orderDateString = StringUtil.toDateStr(orderDate, 10);
 	}
 	public String getPaymentOption() {
 		return paymentOption;
@@ -107,6 +114,16 @@ public class Purchase {
 		poStr.setProperty("2", "신용구매");
 		
 		return poStr.getProperty(this.getPaymentOption(), "-");
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// JSON ==> Domain Object  Binding을 위해 추가된 부분
+	public String getOrderDateString() {
+		return orderDateString;
+	}
+
+	public void setOrderDateString(String orderDateString) {
+		this.orderDateString = orderDateString;
 	}
 	
 }
