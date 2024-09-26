@@ -87,4 +87,16 @@ public class UserRestController {
 		}
 	}
 	
+	//==> 검색정보를 받아 상품목록 검색 및 반환
+	@RequestMapping( value="json/listUser", method=RequestMethod.POST )
+	public Map<String, Object> listUser( @RequestBody Search search ) throws Exception
+	{
+		System.out.println("/user/json/listUser : POST");
+		
+		// Business logic 수행
+		Map<String, Object> map = userService.getUserList(search);
+		
+		return map;
+	}
+	
 }
