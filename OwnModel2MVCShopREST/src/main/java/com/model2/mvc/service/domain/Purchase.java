@@ -18,6 +18,8 @@ public class Purchase {
 	private String tranCode;
 	private Date orderDate;
 	private String divyDate;
+	// 1:현금구매 2:신용구매
+	private String paymentOptionString;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	private String orderDateString;
@@ -107,15 +109,21 @@ public class Purchase {
 				+ tranNo + "]";
 	}
 	
-	public String getPaymentOptionStr()
+
+	// 1:현금구매 2:신용구매
+	public String getPaymentOptionString()
 	{
-		Properties poStr = new Properties();
-		poStr.setProperty("1", "현금구매");
-		poStr.setProperty("2", "신용구매");
+		Properties payStr = new Properties();
+		payStr.setProperty("1", "현금구매");
+		payStr.setProperty("2", "신용구매");
 		
-		return poStr.getProperty(this.getPaymentOption(), "-");
+		return payStr.getProperty(this.paymentOption, "-");
 	}
 	
+	public void setPaymentOptionString(String paymentOptionString) {
+		this.paymentOptionString = paymentOptionString;
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// JSON ==> Domain Object  Binding을 위해 추가된 부분
 	public String getOrderDateString() {
