@@ -16,6 +16,7 @@ public class Product {
 	private Date regDate;
 	private String proTranCode;
 	// null:판매중 1:판매완료 2:배송중 3:배송완료
+	private String proTranCodeString;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	private String regDateString;
@@ -82,20 +83,25 @@ public class Product {
 				+ "[manuDate]" + manuDate+ "[price]" + price + "[prodDetail]" + prodDetail
 				+ "[prodName]" + prodName + "[prodNo]" + prodNo + "[proTranCode]" + proTranCode;
 	}
+
 	
-	public String getProTranCodeStr()
+	// null:판매중 1:판매완료 2:배송중 3:배송완료
+	public String getProTranCodeString() 
 	{
+		if (this.proTranCode == null){
+			return "판매중";
+		}
+		
 		Properties ptcStr = new Properties();
 		ptcStr.setProperty("1", "구매완료");
 		ptcStr.setProperty("2", "배송중");
 		ptcStr.setProperty("3", "배송완료"); // 재고 없음
 		
-		if (this.getProTranCode() == null) {
-			return "판매중";
-		}
-		else {
-			return ptcStr.getProperty(this.getProTranCode(), "-");
-		}
+		return ptcStr.getProperty(proTranCode, "-");
+	}
+	
+	public void setProTranCodeString(String proTranCodeString) {
+		this.proTranCodeString = proTranCodeString;
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +109,7 @@ public class Product {
 	public String getRegDateString() {
 		return regDateString;
 	}
-
+	
 	public void setRegDateString(String regDateString) {
 		this.regDateString = regDateString;
 	}
