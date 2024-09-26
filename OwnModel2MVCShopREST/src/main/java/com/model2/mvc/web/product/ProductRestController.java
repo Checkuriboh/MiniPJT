@@ -31,7 +31,7 @@ public class ProductRestController {
 	///Method
 	
 	//==> 상품번호를 받아 상품정보 검색 및 반환
-	@RequestMapping(value="json/getProduct/{prodNo}", method=RequestMethod.GET)
+	@RequestMapping( value="json/getProduct/{prodNo}", method=RequestMethod.GET )
 	public Product getProduct( @PathVariable int prodNo ) throws Exception
 	{
 		System.out.println("/product/json/getProduct : GET");

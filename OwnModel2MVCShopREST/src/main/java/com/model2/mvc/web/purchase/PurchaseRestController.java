@@ -31,7 +31,7 @@ public class PurchaseRestController {
 	///Method
 	
 	//==> 구매번호를 받아 구매정보 검색 및 반환
-	@RequestMapping(value="json/getPurchase/{tranNo}", method=RequestMethod.GET)
+	@RequestMapping( value="json/getPurchase/{tranNo}", method=RequestMethod.GET )
 	public Purchase getPurchase( @PathVariable int tranNo ) throws Exception
 	{
 		System.out.println("/purchase/json/getPurchase : GET");

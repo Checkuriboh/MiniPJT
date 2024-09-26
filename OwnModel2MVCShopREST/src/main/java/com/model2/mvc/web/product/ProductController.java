@@ -46,7 +46,7 @@ public class ProductController {
 	///Method
 	
 	//==> 상품정보 추가 페이지로 이동
-	@RequestMapping(value="addProduct", method=RequestMethod.GET)
+	@RequestMapping( value="addProduct", method=RequestMethod.GET )
 	public String addProduct() throws Exception
 	{
 		System.out.println("/product/addProduct : GET");
@@ -55,7 +55,7 @@ public class ProductController {
 	}
 
 	//==> 상품정보 추가 B/L 수행
-	@RequestMapping(value="addProduct", method=RequestMethod.POST)
+	@RequestMapping( value="addProduct", method=RequestMethod.POST )
 	public String addProduct( @ModelAttribute("product") Product product ) throws Exception
 	{
 		System.out.println("/product/addProduct : POST");
@@ -66,7 +66,7 @@ public class ProductController {
 	}
 
 	//==> 상품정보 확인 페이지로 이동
-	@RequestMapping(value="getProduct", method=RequestMethod.GET)
+	@RequestMapping( value="getProduct", method=RequestMethod.GET )
 	public String getProduct( 	@RequestParam("prodNo") int prodNo,
 								Model model ) throws Exception
 	{
@@ -80,7 +80,7 @@ public class ProductController {
 	}
 
 	//==> 상품정보 수정 페이지로 이동
-	@RequestMapping(value="updateProduct", method=RequestMethod.GET)
+	@RequestMapping( value="updateProduct", method=RequestMethod.GET )
 	public String updateProduct( 	@RequestParam("prodNo") int prodNo,
 									Model model ) throws Exception
 	{
@@ -94,7 +94,7 @@ public class ProductController {
 	}
 
 	//==> 상품정보 수정 B/L 수행
-	@RequestMapping(value="updateProduct", method=RequestMethod.POST)
+	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
 	public String updateProduct( @ModelAttribute("product") Product product ) throws Exception
 	{
 		System.out.println("/product/updateProduct : POST");
@@ -105,7 +105,7 @@ public class ProductController {
 	}
 
 	//==> 상품목록 검색 후 확인 페이지로 이동
-	@RequestMapping(value="listProduct")
+	@RequestMapping( value="listProduct" )
 	public String listProduct( 	@ModelAttribute("search") Search search, 
 								Model model ) throws Exception
 	{

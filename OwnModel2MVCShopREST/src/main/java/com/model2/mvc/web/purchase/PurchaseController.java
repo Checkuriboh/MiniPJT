@@ -57,7 +57,7 @@ public class PurchaseController {
 	///Method
 	
 	//==> 판매정보 추가 페이지로 이동
-	@RequestMapping(value="addPurchase", method=RequestMethod.GET)
+	@RequestMapping( value="addPurchase", method=RequestMethod.GET )
 	public ModelAndView addPurchase( 	@RequestParam("prodNo") int prodNo, 
 										HttpSession session ) throws Exception
 	{
@@ -75,7 +75,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매정보 추가 B/L 수행
-	@RequestMapping(value="addPurchase", method=RequestMethod.POST)
+	@RequestMapping( value="addPurchase", method=RequestMethod.POST )
 	public ModelAndView addPurchase( 	@ModelAttribute("user") User user, 
 										@ModelAttribute("product") Product product, 
 										@ModelAttribute("purchase") Purchase purchase ) throws Exception
@@ -94,7 +94,7 @@ public class PurchaseController {
 	}
 	
 	//==> 판매정보 확인 페이지로 이동
-	@RequestMapping(value="getPurchase", method=RequestMethod.GET)
+	@RequestMapping( value="getPurchase", method=RequestMethod.GET )
 	public ModelAndView getPurchase( @RequestParam("tranNo") int tranNo ) throws Exception
 	{
 		System.out.println("/purchase/getPurchase : GET");
@@ -107,7 +107,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매정보 수정 페이지로 이동
-	@RequestMapping(value="updatePurchase", method=RequestMethod.GET)
+	@RequestMapping( value="updatePurchase", method=RequestMethod.GET )
 	public ModelAndView updatePurchase( @RequestParam("tranNo") int tranNo ) throws Exception
 	{
 		System.out.println("/purchase/updatePurchase : GET");
@@ -120,7 +120,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매정보 수정 B/L 수행
-	@RequestMapping(value="updatePurchase", method=RequestMethod.POST)
+	@RequestMapping( value="updatePurchase", method=RequestMethod.POST )
 	public ModelAndView updatePurchase( @ModelAttribute("purchase") Purchase purchase ) throws Exception
 	{
 		System.out.println("/purchase/updatePurchase : POST");
@@ -133,7 +133,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매상태 수정 B/L 수행
-	@RequestMapping(value="updateTranCode", method=RequestMethod.GET)
+	@RequestMapping( value="updateTranCode", method=RequestMethod.GET )
 	public ModelAndView updateTranCode( @RequestParam("tranNo") int tranNo,
 										@RequestParam("tranCode") String tranCode ) throws Exception
 	{
@@ -148,7 +148,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매상태 수정 B/L 수행 (상품정보에서 접근 시)
-	@RequestMapping(value="updateTranCodeByProd", method=RequestMethod.GET)
+	@RequestMapping( value="updateTranCodeByProd", method=RequestMethod.GET )
 	public ModelAndView updateTranCodeByProd( 	@RequestParam("prodNo") int prodNo,
 												@RequestParam("tranCode") String tranCode ) throws Exception
 	{
@@ -169,7 +169,7 @@ public class PurchaseController {
 	}
 
 	//==> 판매목록 검색 후 확인 페이지로 이동
-	@RequestMapping(value="listPurchase")
+	@RequestMapping( value="listPurchase" )
 	public ModelAndView listPurchase( 	@ModelAttribute("search") Search search, 
 										HttpSession session ) throws Exception
 	{

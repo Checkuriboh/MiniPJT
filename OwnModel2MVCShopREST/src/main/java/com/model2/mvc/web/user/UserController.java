@@ -45,7 +45,7 @@ public class UserController {
 	
 	//@RequestMapping("/addUserView.do")
 	//public String addUserView() throws Exception {
-	@RequestMapping(value="addUser", method=RequestMethod.GET)
+	@RequestMapping( value="addUser", method=RequestMethod.GET )
 	public String addUser() throws Exception {
 
 		System.out.println("/user/addUser : GET");
@@ -54,7 +54,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/addUser.do")
-	@RequestMapping(value="addUser", method=RequestMethod.POST)
+	@RequestMapping( value="addUser", method=RequestMethod.POST )
 	public String addUser( @ModelAttribute("user") User user ) throws Exception {
 
 		System.out.println("/user/addUser : POST");
@@ -65,7 +65,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/getUser.do")
-	@RequestMapping(value="getUser", method=RequestMethod.GET)
+	@RequestMapping( value="getUser", method=RequestMethod.GET )
 	public String getUser( @RequestParam("userId") String userId , Model model ) throws Exception {
 		
 		System.out.println("/user/getUser : GET");
@@ -79,7 +79,7 @@ public class UserController {
 	
 	//@RequestMapping("/updateUserView.do")
 	//public String updateUserView( @RequestParam("userId") String userId , Model model ) throws Exception{
-	@RequestMapping(value="updateUser", method=RequestMethod.GET)
+	@RequestMapping( value="updateUser", method=RequestMethod.GET )
 	public String updateUser( @RequestParam("userId") String userId , Model model ) throws Exception{
 
 		System.out.println("/user/updateUser : GET");
@@ -92,7 +92,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/updateUser.do")
-	@RequestMapping(value="updateUser", method=RequestMethod.POST)
+	@RequestMapping( value="updateUser", method=RequestMethod.POST )
 	public String updateUser( @ModelAttribute("user") User user , HttpSession session) throws Exception {
 
 		System.out.println("/user/updateUser : POST");
@@ -110,7 +110,7 @@ public class UserController {
 	
 	//@RequestMapping("/loginView.do")
 	//public String loginView() throws Exception{
-	@RequestMapping(value="login", method=RequestMethod.GET)
+	@RequestMapping( value="login", method=RequestMethod.GET )
 	public String login() throws Exception {
 
 		System.out.println("/user/logon : GET");
@@ -119,7 +119,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/login.do")
-	@RequestMapping(value="login", method=RequestMethod.POST)
+	@RequestMapping( value="login", method=RequestMethod.POST )
 	public String login(@ModelAttribute("user") User user , HttpSession session ) throws Exception{
 
 		System.out.println("/user/logon : POST");
@@ -134,10 +134,10 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/logout.do")
-	@RequestMapping(value="logout", method=RequestMethod.GET)
+	@RequestMapping( value="logout", method=RequestMethod.GET )
 	public String logout(HttpSession session ) throws Exception{
 
-		System.out.println("/user/logout : POST");
+		System.out.println("/user/logout : GET");
 		
 		session.invalidate();
 		
@@ -145,7 +145,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/checkDuplication.do")
-	@RequestMapping(value="checkDuplication", method=RequestMethod.POST)
+	@RequestMapping( value="checkDuplication", method=RequestMethod.POST )
 	public String checkDuplication( @RequestParam("userId") String userId , Model model ) throws Exception {
 		
 		System.out.println("/user/checkDuplication : POST");
@@ -159,7 +159,7 @@ public class UserController {
 	}
 	
 	//@RequestMapping("/listUser.do")
-	@RequestMapping(value="listUser")
+	@RequestMapping( value="listUser" )
 	public String listUser( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
 		
 		System.out.println("/user/listUser : GET / POST");
