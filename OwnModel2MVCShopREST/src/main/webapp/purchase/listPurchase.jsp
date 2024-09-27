@@ -85,7 +85,7 @@ function fncDetailFormSubmit() {
 			<td></td>
 			<td align="left"> ${purchase.receiverPhone} </td>
 			<td></td>
-			<td align="left">현재 ${purchase.purchaseProd.proTranCodeStr} 상태 입니다.</td>
+			<td align="left">현재 ${purchase.purchaseProd.proTranCodeString} 상태 입니다.</td>
 			<td></td>
 			<td align="left">
 				<c:if test="${ purchase.tranCode == '2' }">
