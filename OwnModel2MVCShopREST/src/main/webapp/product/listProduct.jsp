@@ -46,43 +46,38 @@
 		//==> 검색,상품확인,구매,배경색 Event 처리
 		$(function() {
 			
+			//==> 검색
 			$( "td.ct_btn01:contains('검색')" ).bind("click", function() {
 				fncGetProductList(1);
 			});
 			
-			/* 
-			//==> (menu=search) 상품번호 클릭 Event -> 상품정보 확인 
-			$( ".ct_list_pop td:nth-child(4)" ).bind("click" , function() {
-				self.location = "/product/getProduct?menu=search&prodNo="
-								+ $(this).parent().children(":first").val();
-			}); */
-			$( ".ct_list_pop td:not(:contains('재고 없음'))" ).css('background-color','red');
-			
+			//==> (menu=search) 상품번호 클릭 Event -> 상품정보 확인/수정
+			$( ".ct_list_pop td:nth-child(4)" ).bind('click', function() {
+				
+				var prodNo = $(this).parent().children(":first").val();
+				
+				if ( ${ param.menu == 'search' } )
+				{
+					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
+				}
+				else if ( ${ param.menu == 'manage' } ) 
+				{
+					self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
+				}
+				
+			});
 			
 			//==> 상품번호 + click 주석 색 변경
-			$( ".ct_list_pop span:not(:contains('재고 없음'))" ).each(function() {
-				
-				$(this).parent().eq(3).css("color" , "red")
-									  .bind('click', function() {
-					if ( ${param.menu == 'search'} )
-					{
-						self.location = "/product/getProduct?menu=search&prodNo="
-										+ $(this).parent().children(":first").val();
-					}
-					else if ( ${param.menu == 'manage'} )
-					{
-						self.location = "/product/updateProduct?menu=manage&prodNo="
-										+ $(this).parent().children(":first").val();
-					}
-				});
-			});
-			$("h7").css("color" , "red");
+			$( ".ct_list_pop td:nth-child(4) , h7" ).css("color" , "red");
 
 			//==> 짝수번째 row 배경색 변경			
 			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
-			
-			// href="/purchase/updateTranCodeByProd?prodNo=${product.prodNo}&tranCode=2"
+			//==> 배송하기 click Event -> 상품상태 변경(배송중)
+			$( ".ct_list_pop a" ).bind('click', function() {
+				var prodNo = $(this).parent().parent().children(":first").val();
+				self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
+			});
 			
 		});
 
@@ -184,7 +179,6 @@
 			<td align="left">${product.regDate}</td>
 			<td></td>			
 			<td align="left">
-				<input type="hidden" name="proTranCode" value="${product.proTranCode}">
 				<span>
 					<c:if test="${ param.menu=='manage' }">${product.proTranCodeString}</c:if>
 					<c:if test="${ param.menu=='search' }">
