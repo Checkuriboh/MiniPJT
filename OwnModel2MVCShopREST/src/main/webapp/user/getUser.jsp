@@ -102,7 +102,7 @@
 	<tr>
 		<td width="104" class="ct_write">휴대전화번호</td>
 		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${ !empty user.phone ? user.phone : ''}	</td>
+		<td class="ct_write01">${ !empty user.phone ? user.phone : ''}</td>
 	</tr>
 
 	<tr>
