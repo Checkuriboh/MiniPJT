@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.model2.mvc.common.Page;
@@ -55,25 +56,6 @@ public class UserRestController {
 		else {
 			return false;
 		}
-	}	
-	
-	//==> 회원 정보를 받아 DB에서 갱신
-	@RequestMapping( value="json/updateUser", method=RequestMethod.POST )
-	public User updateUser( @RequestBody User user, 
-							HttpSession session ) throws Exception
-	{
-		System.out.println("/user/json/updateUser : POST");
-
-		userService.updateUser(user);
-		
-		
-		String sessionId = ( (User)session.getAttribute("user") ).getUserId();
-		
-		if ( sessionId.equals(user.getUserId()) ) {
-			session.setAttribute("user", user);
-		}
-		
-		return user;
 	}
 	
 	//==> 회원 ID를 받아 회원 정보 검색 및 반환
@@ -84,6 +66,23 @@ public class UserRestController {
 		
 		//Business Logic
 		return userService.getUser(userId);
+	}
+	
+	//==> 회원 정보를 받아 DB에서 갱신
+	@RequestMapping( value="json/updateUser", method=RequestMethod.POST )
+	public User updateUser( @RequestBody User user, 
+							HttpSession session ) throws Exception
+	{
+		System.out.println("/user/json/updateUser : POST");
+
+		userService.updateUser(user);
+		
+		String sessionId = ( (User)session.getAttribute("user") ).getUserId();
+		if ( sessionId.equals(user.getUserId()) ) {
+			session.setAttribute("user", user);
+		}
+		
+		return user;
 	}
 
 	//==> 회원정보(ID,password)를 받아 로그인 
@@ -122,16 +121,24 @@ public class UserRestController {
 		}
 	}
 	
+	//==> 회원 ID를 받아 중복 체크
+	@RequestMapping( value="json/checkDuplication", method=RequestMethod.POST )
+	public boolean checkDuplication( @RequestParam("userId") String userId ) throws Exception 
+	{
+		System.out.println("/user/json/checkDuplication : POST");
+		
+		//Business Logic
+		return userService.checkDuplication(userId);
+	}
+	
 	//==> 검색정보를 받아 상품목록 검색 및 반환
 	@RequestMapping( value="json/listUser", method=RequestMethod.POST )
 	public Map<String, Object> listUser( @RequestBody Search search ) throws Exception
 	{
 		System.out.println("/user/json/listUser : POST");
-		
-		// Business logic 수행
-		Map<String, Object> map = userService.getUserList(search);
-		
-		return map;
+
+		//Business Logic
+		return userService.getUserList(search);
 	}
 	
 }
