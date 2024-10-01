@@ -41,6 +41,22 @@ public class UserRestController {
 	
 	///Method
 	
+	//==> 회원 정보를 받아 DB에 추가
+	@RequestMapping( value="json/addUser", method=RequestMethod.POST )
+	public boolean addUser( @RequestBody User user ) throws Exception
+	{
+		System.out.println("/user/json/addUser : POST");
+
+		userService.addUser(user);
+		
+		if ( userService.getUser(user.getUserId()) != null ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}	
+	
 	//==> 회원 ID를 받아 회원 정보 검색 및 반환
 	@RequestMapping( value="json/getUser/{userId}", method=RequestMethod.GET )
 	public User getUser( @PathVariable String userId ) throws Exception
