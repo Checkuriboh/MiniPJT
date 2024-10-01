@@ -57,6 +57,25 @@ public class UserRestController {
 		}
 	}	
 	
+	//==> 회원 정보를 받아 DB에서 갱신
+	@RequestMapping( value="json/updateUser", method=RequestMethod.POST )
+	public User updateUser( @RequestBody User user, 
+							HttpSession session ) throws Exception
+	{
+		System.out.println("/user/json/updateUser : POST");
+
+		userService.updateUser(user);
+		
+		
+		String sessionId = ( (User)session.getAttribute("user") ).getUserId();
+		
+		if ( sessionId.equals(user.getUserId()) ) {
+			session.setAttribute("user", user);
+		}
+		
+		return user;
+	}
+	
 	//==> 회원 ID를 받아 회원 정보 검색 및 반환
 	@RequestMapping( value="json/getUser/{userId}", method=RequestMethod.GET )
 	public User getUser( @PathVariable String userId ) throws Exception
