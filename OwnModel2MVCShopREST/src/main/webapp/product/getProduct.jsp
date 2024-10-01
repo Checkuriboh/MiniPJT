@@ -1,16 +1,45 @@
 <%@ page contentType="text/html; charset=euc-kr" %>
+<%@ page pageEncoding="EUC-KR" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<head>
-<title>상품상세조회</title>
 
-<link rel="stylesheet" href="/css/admin.css" type="text/css">
+<head>
+	<meta charset="EUC-KR">
+	<title>상품상세조회</title>
+
+	<link rel="stylesheet" href="/css/admin.css" type="text/css">
+	
+	<!-- CDN(Content Delivery Network) 호스트 사용 -->
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+
+		//==> Event 발생 처리
+		$(function() {
+
+			//==> "구매" Event 처리 및 연결
+			$( "td.ct_btn01:contains('구매')" ).bind("click" , function() {
+				self.location = "/purchase/addPurchase?prodNo=${product.prodNo}";
+			});
+			
+			//==> "이전" Event 처리 및 연결
+			$( "td.ct_btn01:contains('이전')" ).bind("click" , function() {
+				history.go(-1);
+			});
+
+			//==> "확인" Event 처리 및 연결
+			$( "td.ct_btn01:contains('확인')" ).bind("click" , function() {
+				history.go(-1);
+			});
+		
+		});
+		
+	</script>
 
 </head>
 
-<body bgcolor="#ffffff" text="#000000">
+<body bgcolor="#ffffff" text="#000000" style="margin:10px;">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -112,28 +141,14 @@
 		<td width="53%"></td>
 		<td align="right">
 			<table border="0" cellspacing="0" cellpadding="0">
-			
-				<c:if test="${ param.menu == 'ok' }">
-					<tr>
-						<td width="17" height="23">
-							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-						</td>
-						<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">
-							<a href="/product/listProduct?menu=manage">확인</a>
-						</td>
-						<td width="14" height="23">
-							<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
-						</td>
-					</tr>
-				</c:if>
 				
-				<c:if test="${ param.menu != 'ok' }">
+				<c:if test="${ (param.menu != 'ok') && (user.role == 'user') }">
 					<tr>
 						<td width="17" height="23">
 							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 						</td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-							<a href="/purchase/addPurchase?prodNo=${product.prodNo}">구매</a>
+							구매
 						</td>
 						<td width="14" height="23">
 							<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -145,7 +160,21 @@
 							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 						</td>
 						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-							<a href="javascript:history.go(-1);">이전</a>
+							이전
+						</td>
+						<td width="14" height="23">
+							<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
+						</td>
+					</tr>
+				</c:if>
+			
+				<c:if test="${ (param.menu == 'ok') || (user.role == 'admin') }">
+					<tr>
+						<td width="17" height="23">
+							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
+						</td>
+						<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+							확인
 						</td>
 						<td width="14" height="23">
 							<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
