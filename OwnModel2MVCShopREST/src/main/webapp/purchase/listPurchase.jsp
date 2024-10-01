@@ -8,9 +8,16 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 
-function fncDetailFormSubmit() {
+//==> pageNavigator 연동
+function fncPageUp(currentPage) {
+	fncGetPurchaseList(currentPage);
+}
+
+function fncGetPurchaseList(currentPage) {
+	$("#currentPage").val(currentPage)
 	document.detailForm.submit();
 }
 
@@ -76,7 +83,7 @@ function fncDetailFormSubmit() {
 			</td>
 			<td></td>
 			<td align="left">
-				<a href="/product/getProduct?prodNo=${purchase.purchaseProd.prodNo}">
+				<a href="/product/getProduct?prodNo=${purchase.purchaseProd.prodNo}&menu=ok">
 					${purchase.purchaseProd.prodName}
 				</a>
 			</td>
@@ -102,14 +109,22 @@ function fncDetailFormSubmit() {
 	</c:forEach>
 	
 </table>
-<!--  페이지 Navigator 끝 -->
-</form>
 
-	<c:if test="${ resultPage.totalCount > 0 }">
-		<jsp:include page="/common/pageNavigator.jsp">
-			<jsp:param name="hrefUrl" value="/purchase/listPurchase?"/>
-		</jsp:include>
-	</c:if>
+<!-- 페이지 네비게이터 -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top:10px;">
+	<tr>
+		<td align="center">
+			<input type="hidden" id="currentPage" name="currentPage" value=""/>
+			
+			<c:if test="${ resultPage.totalCount > 0 }">
+				<jsp:include page="/common/pageNavigator.jsp"/>
+			</c:if>
+			
+    	</td>
+	</tr>
+</table>
+
+</form>
 
 </div>
 

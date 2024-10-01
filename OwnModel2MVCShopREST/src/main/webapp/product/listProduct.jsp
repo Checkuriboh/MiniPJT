@@ -74,7 +74,7 @@
 			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
-			$( ".ct_list_pop a" ).bind('click', function() {
+			$( ".ct_list_pop a" ).css("color" , "red").bind('click', function() {
 				var prodNo = $(this).parent().parent().children(":first").val();
 				self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
 			});
@@ -158,7 +158,7 @@
 		<td class="ct_line02"></td>
 		<td class="ct_list_b">등록일</td>	
 		<td class="ct_line02"></td>
-		<td class="ct_list_b">현재상태</td>	
+		<td class="ct_list_b" width="500">현재상태</td>	
 	</tr>
 	<tr>
 		<td colspan="11" bgcolor="808285" height="1"></td>
