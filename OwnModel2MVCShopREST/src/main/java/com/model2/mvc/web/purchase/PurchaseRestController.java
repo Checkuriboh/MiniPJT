@@ -47,4 +47,49 @@ public class PurchaseRestController {
 		return purchaseService.getPurchase(tranNo);
 	}
 	
+	//==> 판매상태 수정 B/L 수행
+	@RequestMapping( value="json/updateTranCode/{tranCode}/{tranNo}", method=RequestMethod.GET )
+	public boolean updateTranCode( 	@PathVariable String tranCode ,
+									@PathVariable int tranNo ) throws Exception
+	{
+		System.out.println("/purchase/json/updateTranCode : GET");
+
+		Purchase purchase = purchaseService.getPurchase(tranNo);
+		purchase.setTranCode(tranCode);
+		purchaseService.updateTranCode(purchase);
+		
+		purchase = purchaseService.getPurchase(tranNo);
+		if ( tranCode.equals(purchase.getTranCode()) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	//==> 판매상태 수정 B/L 수행 (상품정보에서 접근 시)
+	@RequestMapping( value="json/updateTranCodeByProd/{tranCode}/{prodNo}", method=RequestMethod.GET )
+	public boolean updateTranCodeByProd( 	@PathVariable String tranCode,
+											@PathVariable int prodNo ) throws Exception
+	{
+		System.out.println("/purchase/json/updateTranCodeByProd : GET");
+
+		Product product = new Product();
+		product.setProdNo(prodNo);
+		
+		Purchase purchase = new Purchase();
+		purchase.setPurchaseProd(product);
+		purchase.setTranCode(tranCode);
+
+		purchaseService.updateTranCode(purchase);
+		
+		product = productService.getProduct(prodNo);
+		if ( tranCode.equals(product.getProTranCode()) ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 }
