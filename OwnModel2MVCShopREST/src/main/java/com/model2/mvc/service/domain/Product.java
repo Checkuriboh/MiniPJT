@@ -93,9 +93,9 @@ public class Product {
 		}
 		
 		Properties ptcStr = new Properties();
-		ptcStr.setProperty("1", "구매완료");
+		ptcStr.setProperty("1", "판매완료");
 		ptcStr.setProperty("2", "배송중");
-		ptcStr.setProperty("3", "배송완료"); // 재고 없음
+		ptcStr.setProperty("3", "배송완료");
 		
 		return ptcStr.getProperty(proTranCode, "-");
 	}

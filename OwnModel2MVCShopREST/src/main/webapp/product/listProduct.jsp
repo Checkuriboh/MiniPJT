@@ -141,8 +141,36 @@
 			$( ".ct_list_pop a" ).css("color", "red").bind('click', function() {
 
 				var prodNo = $(this).parent().parent().next().children("td").attr("id");
-				self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
+				var thisProd = $(this);
 				
+				//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
+				$.ajax(
+						{
+							url : "/purchase/json/updateTranCodeByProd/2/"+prodNo ,
+							method : "GET" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							success : function(data , status) {
+								
+								if (data === false) {
+									alert("배송 처리중 오류 발생");
+									return;
+								}
+								
+								alert( prodNo + "번 상품 \n배송 요청 완료" );
+								thisProd.prev().text("배송중");
+								thisProd.text("");
+								
+							}, 
+							error : function() {
+								alert("배송 요청 실패");
+							}
+						}
+				);
+				// ajax end
 			});
 			
 			//==> 짝수번째 row 배경색 변경			
