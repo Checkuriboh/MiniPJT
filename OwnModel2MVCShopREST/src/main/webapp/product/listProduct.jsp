@@ -24,17 +24,23 @@
 		{	
 			if ( isNaN(Number( $(".ct_input_g[name='searchKeyword']").val() )) )
 			{
-				if ($(".ct_input_g[name='searchCondition']").val() == "0")
+				if ( $(".ct_input_g[name='searchCondition']").val() == "0" )
 				{
 					alert("상품번호에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
-				if ($(".ct_input_g[name='searchCondition']").val() == "2")
+			}
+			
+			if ( isNaN(Number( $(".ct_input_g[name='startSearchRange']").val() )) ||
+				 isNaN(Number( $(".ct_input_g[name='endSearchRange']").val() ))		)
+			{
+				if ( $(".ct_input_g[name='searchCondition']").val() == "2" )
 				{
 					alert("상품가격에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
 			}
+			
 			$("#currentPage").val(currentPage)
 			
 			$("form").attr("method", "POST")
@@ -50,76 +56,97 @@
 				fncGetProductList(1);
 			});
 			
-			//==> '재고 없음' 외의 상품명 filtering
-			$( ".ct_list_pop span:not(:contains('재고 없음'))" ).each(function() {
-
-				//==> 상품명 click Evnet 처리 및 연결
-				$(this).parent().parent().children(":eq(2)").bind("click", function() {
-					
-					var prodNo = $(this).parent().next().children("td").attr("id");
-
-					if ( ${ param.menu == 'manage' } ) 
-					{
-						self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
-					}
-					else if ( ${ param.menu == 'search' } )
-					{
-						//self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
-						$.ajax(
-								{
-									url : "/product/json/getProduct/"+prodNo ,
-									method : "GET" ,
-									dataType : "json" ,
-									headers : {
-										"Accept" : "application/json",
-										"Content-Type" : "application/json"
-									},
-									success : function(JSONData , status) {
-										
-										var displayValue = "<h3>"
-															+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
-															+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
-															+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
-															+"&nbsp; 가 격 : "+JSONData.price+"<br>"
-															+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
-															+"</h3>";
-
-										var thisProd = $( "#"+prodNo+"" );
-										
-										if (thisProd.html() != displayValue) 
-										{
-											$("h3").remove();
-											thisProd.html(displayValue);
-										}
-										else {
-											thisProd.html("");
-										}
-										
-									}
-								}
-						);
-						// ajax end
-					}
-					
-				})
-				//==> click 가능한 상품명 색 변경
-				.css("color", "red");
+			//==> 검색 설정 변경 Event 발생 시 입력 창 변경
+			$( "select[name='searchCondition']" ).bind("change", function() {
+				
+				if ( $(this).val() == '2' ) 
+				{
+					$("span:has(input[name='searchKeyword'])").css("display", "none");
+					$("span:contains('~')").css("display", "inline-block");
+				}
+				else
+				{
+					$("span:has(input[name='searchKeyword'])").css("display", "inline-block");
+					$("span:contains('~')").css("display", "none");
+				}
 				
 			});
 			
+			
+			//==> manage 일 때 구매된 상품명 click Event
+			if ( ${ param.menu == 'manage' } ) 
+			{
+				$( ".ct_list_pop:has(span:not(:contains('판매중'))) td:nth-child(3)" ).bind("click", function() {
+					
+					var prodNo = $(this).parent().next().children("td").attr("id");
+					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;	
+					
+				}).css("color", "blue");
+			}
+			
+			//==> '판매중' 상품명 click Event 연결 및 처리
+			$( ".ct_list_pop:has(span:contains('판매중')) td:nth-child(3)" ).bind("click", function() {
+					
+				var prodNo = $(this).parent().next().children("td").attr("id");
+
+				if ( ${ param.menu == 'manage' } ) 
+				{
+					self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
+				}
+				else if ( ${ param.menu == 'search' } )
+				{
+					//self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
+					$.ajax(
+							{
+								url : "/product/json/getProduct/"+prodNo ,
+								method : "GET" ,
+								dataType : "json" ,
+								headers : {
+									"Accept" : "application/json",
+									"Content-Type" : "application/json"
+								},
+								success : function(JSONData , status) {
+									
+									var displayValue = "<h3>"
+														+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
+														+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
+														+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
+														+"&nbsp; 가 격 : "+JSONData.price+"<br>"
+														+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
+														+"</h3>";
+
+									var thisProd = $( "#"+prodNo+"" );
+									
+									if (thisProd.html() != displayValue) 
+									{
+										$("h3").remove();
+										thisProd.html(displayValue);
+									}
+									else {
+										thisProd.html("");
+									}
+									
+								}
+							}
+					);
+					// ajax end
+				}
+			//==> click 가능한 상품명 색 변경
+			}).css("color", "red");
+			
 			//==> (click:상세정보) 색 변경
 			$("h7").css("color" , "red");
-
-			//==> 짝수번째 row 배경색 변경			
-			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
 			$( ".ct_list_pop a" ).css("color", "red").bind('click', function() {
 
-				var prodNo = $(this).parent().next().children("td").attr("id");
+				var prodNo = $(this).parent().parent().next().children("td").attr("id");
 				self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
 				
 			});
+			
+			//==> 짝수번째 row 배경색 변경			
+			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
 		});
 
@@ -163,9 +190,20 @@
 				<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? 'selected' : ''}>상품번호</option>
 				<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? 'selected' : ''}>상품명</option>
 				<option value="2" ${ ! empty search.searchCondition && search.searchCondition==2 ? 'selected' : ''}>상품가격</option>
-			</select>				
-			<input 	type="text" name="searchKeyword"  value="${search.searchKeyword}" 
-					class="ct_input_g" style="width:200px; height:19px" >
+			</select>
+			
+			<span style="display:${ ! empty search.searchCondition && search.searchCondition==2 ? 'none' : 'inline-block'};">
+				<input type="text" name="searchKeyword" value="${search.searchKeyword}" 
+						class="ct_input_g" style="width:200px; height:19px" />
+			</span>
+			
+			<span style="display:${ ! empty search.searchCondition && search.searchCondition==2 ? 'inline-block' : 'none'}; 
+						 width:200px;">
+				<input type="text" name="startSearchRange" value="${search.startSearchRange}" 
+						class="ct_input_g" style="width:90px; height:19px" /> ~ 
+				<input type="text" name="endSearchRange" value="${search.endSearchRange}" 
+						class="ct_input_g" style="width:90px; height:19px" />
+			</span>
 		</td>
 		<td align="right" width="70">
 			<table border="0" cellspacing="0" cellpadding="0">

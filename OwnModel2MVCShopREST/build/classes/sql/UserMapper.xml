@@ -20,7 +20,7 @@
 	
 	<!-- SQL : INSERT -->
 	<insert id="addUser" parameterType="user" >
-	 	INSERT
+		INSERT
 		INTO 	users( user_id , user_name , password , role , ssn, cell_phone, addr, email , reg_date) 
 		VALUES	( 	#{userId} , 
 					#{userName} , 
@@ -31,26 +31,26 @@
 					#{addr:VARCHAR} , 
 					#{email:VARCHAR} , 
 					SYSDATE )
-	 </insert>
+	</insert>
 	 
-	 <!-- SQL : SELECT ONE -->
-	 <select id="getUser" parameterType="string" resultMap="userSelectMap">
+	<!-- SQL : SELECT ONE -->
+	<select id="getUser" parameterType="string" resultMap="userSelectMap">
 		SELECT	user_id , user_name , password , role ,  cell_phone ,  addr , email , reg_date 		
 		FROM 	users 
 		WHERE 	user_id = #{value}
-	 </select>
+	</select>
 	 
-	 <!-- SQL : UPDATE -->
-	 <update id="updateUser" parameterType="user" >
-	   	UPDATE users
-	   	<set>
+	<!-- SQL : UPDATE -->
+	<update id="updateUser" parameterType="user" >
+	   UPDATE users
+	   <set>
 	   		user_name 	= #{userName} ,
 			cell_phone	= #{phone},
 			addr 		= #{addr} ,
 			email		= #{email}
-	   	</set>
-	   	WHERE	user_id = #{userId}
-	 </update>
+	  	</set>
+	  	WHERE	user_id = #{userId}
+	</update>
 	 
 	<!-- SQL : SELECT LIST -->
 	<select id="getUserList" parameterType="search" resultMap="userSelectMap">
@@ -58,13 +58,13 @@
 	  	FROM	(	SELECT	inner_table.* , ROWNUM AS row_seq
 	  				FROM	(	SELECT user_id , user_name , email
 								FROM users
-								<if test="searchCondition != null">
+								<if test="searchCondition != null and searchKeyword !='' ">
 									<where>
-										<if test="searchCondition == 0 and searchKeyword !='' ">
+										<if test="searchCondition == 0">
 											user_id = #{searchKeyword}
 										</if>
-										<if test="searchCondition == 1 and searchKeyword !='' ">
-											user_name = #{searchKeyword}
+										<if test="searchCondition == 1">
+											user_name LIKE '%${searchKeyword}%'
 										</if>
 									</where>
 								</if>
@@ -73,34 +73,28 @@
 					WHERE ROWNUM &lt;= #{endRowNum}
 				)
 		WHERE	row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
-	 </select>
-	 	<!--  위 두번째 subQuery 의  
-	 			WHERE ROWNUM &lt;= #{endRowNum} ) 는
-	 			WHERE ROWNUM <= #{endRowNum} ) 의미이며..
-	 			< 는 keyword 로 &lt; 를	사용.
-	 			
-	 			<![CDATA[  ~~~  ]]> 를 이용하여 아래와 같이 사용  할 수 있다.
-	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리  
-
-				WHERE ROWNUM <![CDATA[ <=]]> #{endRowNum} )
-		-->
+	</select>
+	<!--  
+	 			< 는 keyword 로 &lt; 를 사용.
+	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리 
+	-->
 	
 	<!-- SQL : SELECT ROW Count -->	 
-	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
-	  	SELECT	COUNT(*)
+	<select  id="getTotalCount"  parameterType="search"	 resultType="int">
+		SELECT	COUNT(*)
 	  	FROM	(	SELECT user_id , user_name , email
 					FROM users
-					<if test="searchCondition != null">
+					<if test="searchCondition != null and searchKeyword !='' ">
 						<where>
-							<if test="searchCondition == 0 and searchKeyword !='' ">
+							<if test="searchCondition == 0">
 						 		user_id = #{searchKeyword}
 							</if>
-							<if test="searchCondition == 1 and searchKeyword !='' ">
-						 		user_name = #{searchKeyword}
+							<if test="searchCondition == 1">
+						 		user_name LIKE '%${searchKeyword}%'
 							</if>
 						</where>
 					</if>
 				) countTable						
-	 </select>
-	 
+	</select>
+	
 </mapper>

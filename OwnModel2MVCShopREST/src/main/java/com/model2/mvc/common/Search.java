@@ -13,12 +13,17 @@ public class Search {
 	//==> UserMapper.xml 의 
 	//==> <select  id="getUserList"  parameterType="search"	resultMap="userSelectMap">
 	//==> 참조
-	private int endRowNum;
 	private int startRowNum;
+	private int endRowNum;
+	//==> 범위 검색용 Field
+	private int startSearchRange;
+	private int endSearchRange;
+	
 	
 	///Constructor
 	public Search() {
 	}
+	
 	
 	///Method
 	public int getPageSize() {
@@ -50,19 +55,49 @@ public class Search {
 	}
 	
 	//==> Select Query 시 ROWNUM 마지막 값 
+	public int getStartRowNum() {
+		return (getCurrentPage()-1)*getPageSize()+1;
+	}
+	//==> Select Query 시 ROWNUM 시작 값
 	public int getEndRowNum() {
 		return getCurrentPage()*getPageSize();
 	}
-	//==> Select Query 시 ROWNUM 시작 값
-	public int getStartRowNum() {
-		return (getCurrentPage()-1)*getPageSize()+1;
+
+	//==> 범위 검색용 Field get/set
+	public int getStartSearchRange() {
+		return startSearchRange;
+	}
+	public void setStartSearchRange(int startSearchRange) {
+		this.startSearchRange = startSearchRange;
+	}
+	public int getEndSearchRange() {
+		return endSearchRange;
+	}
+	public void setEndSearchRange(int endSearchRange) {
+		this.endSearchRange = endSearchRange;
 	}
 
 	@Override
 	public String toString() {
-		return "Search [currentPage=" + currentPage + ", searchCondition="
-				+ searchCondition + ", searchKeyword=" + searchKeyword
-				+ ", pageSize=" + pageSize + ", endRowNum=" + endRowNum
-				+ ", startRowNum=" + startRowNum + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Search [currentPage=");
+		builder.append(currentPage);
+		builder.append(", searchCondition=");
+		builder.append(searchCondition);
+		builder.append(", searchKeyword=");
+		builder.append(searchKeyword);
+		builder.append(", pageSize=");
+		builder.append(pageSize);
+		builder.append(", startRowNum=");
+		builder.append(startRowNum);
+		builder.append(", endRowNum=");
+		builder.append(endRowNum);
+		builder.append(", startSearchRange=");
+		builder.append(startSearchRange);
+		builder.append(", endSearchRange=");
+		builder.append(endSearchRange);
+		builder.append("]");
+		return builder.toString();
 	}
+
 }

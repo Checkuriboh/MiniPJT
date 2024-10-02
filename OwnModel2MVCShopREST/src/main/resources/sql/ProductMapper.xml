@@ -66,9 +66,9 @@
 								<if test="searchCondition == 1">
 									AND prod_name LIKE '%${searchKeyword}%'
 								</if>
-								<if test="searchCondition == 2">
-									AND price = #{searchKeyword}
-								</if>
+							</if>
+							<if test="searchCondition == 2 and endSearchRange > 0" >
+								AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
 							</if>
 						</where>
 						ORDER BY prod_no
@@ -92,9 +92,9 @@
 						<if test="searchCondition == 1">
 							AND prod_name LIKE '%${searchKeyword}%'
 						</if>
-						<if test="searchCondition == 2">
-							AND price = #{searchKeyword}
-						</if>
+					</if>
+					<if test="searchCondition == 2 and endSearchRange > 0" >
+						AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
 					</if>
 				</where>
 			) countTable			
