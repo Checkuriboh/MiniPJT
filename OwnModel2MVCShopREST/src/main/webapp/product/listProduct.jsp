@@ -42,7 +42,6 @@
 					 .submit();
 		}
 		
-		
 		//==> 검색,상품확인,구매,배경색 Event 처리
 		$(function() {
 			
@@ -51,32 +50,75 @@
 				fncGetProductList(1);
 			});
 			
-			//==> (menu=search) 상품번호 클릭 Event -> 상품정보 확인/수정
-			$( ".ct_list_pop td:nth-child(4)" ).bind('click', function() {
-				
-				var prodNo = $(this).parent().children(":first").val();
-				
-				if ( ${ param.menu == 'search' } )
-				{
-					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
-				}
-				else if ( ${ param.menu == 'manage' } ) 
-				{
-					self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
-				}
+			//==> '재고 없음' 외의 상품명 filtering
+			$( ".ct_list_pop span:not(:contains('재고 없음'))" ).each(function() {
+
+				//==> 상품명 click Evnet 처리 및 연결
+				$(this).parent().parent().children(":eq(2)").bind("click", function() {
+					
+					var prodNo = $(this).parent().next().children("td").attr("id");
+
+					if ( ${ param.menu == 'manage' } ) 
+					{
+						self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
+					}
+					else if ( ${ param.menu == 'search' } )
+					{
+						//self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
+						$.ajax(
+								{
+									url : "/product/json/getProduct/"+prodNo ,
+									method : "GET" ,
+									dataType : "json" ,
+									headers : {
+										"Accept" : "application/json",
+										"Content-Type" : "application/json"
+									},
+									success : function(JSONData , status) {
+										
+										var displayValue = "<h3>"
+															+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
+															+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
+															+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
+															+"&nbsp; 가 격 : "+JSONData.price+"<br>"
+															+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
+															+"</h3>";
+
+										var thisProd = $( "#"+prodNo+"" );
+										
+										if (thisProd.html() != displayValue) 
+										{
+											$("h3").remove();
+											thisProd.html(displayValue);
+										}
+										else {
+											thisProd.html("");
+										}
+										
+									}
+								}
+						);
+						// ajax end
+					}
+					
+				})
+				//==> click 가능한 상품명 색 변경
+				.css("color", "red");
 				
 			});
 			
-			//==> 상품번호 + click 주석 색 변경
-			$( ".ct_list_pop td:nth-child(4) , h7" ).css("color" , "red");
+			//==> (click:상세정보) 색 변경
+			$("h7").css("color" , "red");
 
 			//==> 짝수번째 row 배경색 변경			
 			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
-			$( ".ct_list_pop a" ).css("color" , "red").bind('click', function() {
-				var prodNo = $(this).parent().parent().children(":first").val();
+			$( ".ct_list_pop a" ).css("color", "red").bind('click', function() {
+
+				var prodNo = $(this).parent().next().children("td").attr("id");
 				self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
+				
 			});
 			
 		});
@@ -169,7 +211,6 @@
 		<c:set var="i" value="${ i+1 }" />
 		
 		<tr class="ct_list_pop">
-			<input type="hidden" name="prodNo" value="${product.prodNo}">
 			<td align="center"> ${i} </td>
 			<td></td>
 			<td align="left">${product.prodName}</td>
@@ -177,7 +218,7 @@
 			<td align="left">${product.price}</td>
 			<td></td>
 			<td align="left">${product.regDate}</td>
-			<td></td>			
+			<td></td>
 			<td align="left">
 				<span>
 					<c:if test="${ param.menu=='manage' }">${product.proTranCodeString}</c:if>
@@ -190,9 +231,9 @@
 				</a>
 			</td>
 		</tr>
-	
+		
 		<tr>
-			<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+			<td colspan="11" bgcolor="D6D7D6" height="1" id="${product.prodNo}"></td>
 		</tr>
 		
 	</c:forEach>
