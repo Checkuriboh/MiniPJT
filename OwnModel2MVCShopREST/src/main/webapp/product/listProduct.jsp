@@ -73,11 +73,47 @@
 			});
 
 			
-			//==> getProduct 접근하기
+			//==> No 클릭 시 상세정보 출력
 			$( ".ct_list_pop td:nth-child(1)" ).bind("click", function() {
+				
 				var prodNo = $(this).parent().next().children("td").attr("id");
-				self.location = "/product/getProduct?menu=search&prodNo="+prodNo;	
+				
+				$.ajax(
+						{
+							url : "/product/json/getProduct/"+prodNo ,
+							method : "GET" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							success : function(JSONData , status) {
+								
+								var displayValue = "<h3>"
+													+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
+													+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
+													+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
+													+"&nbsp; 가 격 : "+JSONData.price+"<br>"
+													+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
+													+"</h3>";
+
+								var thisProd = $( "#"+prodNo+"" );
+								
+								if (thisProd.html() != displayValue) 
+								{
+									$("h3").remove();
+									thisProd.html(displayValue);
+								}
+								else {
+									thisProd.html("");
+								}
+								
+							}
+						}
+				);
+				// ajax end
 			});
+			
 			
 			//==> manage 일 때 구매된 상품명 click Event
 			if ( ${ param.menu == 'manage' } ) 
@@ -101,47 +137,15 @@
 				}
 				else if ( ${ param.menu == 'search' } )
 				{
-					//self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
-					$.ajax(
-							{
-								url : "/product/json/getProduct/"+prodNo ,
-								method : "GET" ,
-								dataType : "json" ,
-								headers : {
-									"Accept" : "application/json",
-									"Content-Type" : "application/json"
-								},
-								success : function(JSONData , status) {
-									
-									var displayValue = "<h3>"
-														+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
-														+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
-														+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
-														+"&nbsp; 가 격 : "+JSONData.price+"<br>"
-														+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
-														+"</h3>";
-
-									var thisProd = $( "#"+prodNo+"" );
-									
-									if (thisProd.html() != displayValue) 
-									{
-										$("h3").remove();
-										thisProd.html(displayValue);
-									}
-									else {
-										thisProd.html("");
-									}
-									
-								}
-							}
-					);
-					// ajax end
+					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;
 				}
+			
+			}).css("color", "red"); 
 			//==> click 가능한 상품명 색 변경
-			}).css("color", "red");
 			
 			//==> (click:상세정보) 색 변경
 			$("h7").css("color" , "red");
+			
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
 			$( ".ct_list_pop a" ).css("color", "red").bind("click", function() {
@@ -178,6 +182,7 @@
 				);
 				// ajax end
 			});
+			
 			
 			//==> 짝수번째 row 배경색 변경			
 			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
