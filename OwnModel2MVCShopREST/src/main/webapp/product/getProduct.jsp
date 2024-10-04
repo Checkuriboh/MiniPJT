@@ -142,7 +142,7 @@
 		<td align="right">
 			<table border="0" cellspacing="0" cellpadding="0">
 				
-				<c:if test="${ (param.menu != 'ok') && (user.role == 'user') }">
+				<c:if test="${ (product.proTranCode == null ) && (user.role == 'user') }">
 					<tr>
 						<td width="17" height="23">
 							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
@@ -168,7 +168,7 @@
 					</tr>
 				</c:if>
 			
-				<c:if test="${ (param.menu == 'ok') || (user.role == 'admin') }">
+				<c:if test="${ (product.proTranCode != null ) || (user.role == 'admin') }">
 					<tr>
 						<td width="17" height="23">
 							<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
