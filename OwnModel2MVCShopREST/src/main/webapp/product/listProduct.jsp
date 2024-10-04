@@ -71,7 +71,13 @@
 				}
 				
 			});
+
 			
+			//==> getProduct 접근하기
+			$( ".ct_list_pop td:nth-child(1)" ).bind("click", function() {
+				var prodNo = $(this).parent().next().children("td").attr("id");
+				self.location = "/product/getProduct?menu=search&prodNo="+prodNo;	
+			});
 			
 			//==> manage 일 때 구매된 상품명 click Event
 			if ( ${ param.menu == 'manage' } ) 
