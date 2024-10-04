@@ -2,12 +2,9 @@ package com.model2.mvc.web.product;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.DiskFileUpload;
@@ -38,9 +35,6 @@ public class ProductController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
-	
-	@Autowired
-    private ServletContext servletContext;
 	
 	@Value("#{commonProperties['pageUnit'] ?: 3}")
 	private int pageUnit;
@@ -73,10 +67,11 @@ public class ProductController {
 	{
 		System.out.println("/product/addProduct : POST");
 
+		
 		if (FileUpload.isMultipartContent(request))
 		{
 			String tempDir = "C:\\Users\\bitcamp\\git\\MiniPJT\\OwnModel2MVCShopREST\\src\\main\\webapp\\images\\uploadFiles\\";
-			String tempDir2 = "/uploadFiles/";
+			//String tempDir2 = "/uploadFiles/";
 
 			DiskFileUpload fileUpload = new DiskFileUpload();
 			fileUpload.setRepositoryPath(tempDir);
@@ -138,8 +133,6 @@ public class ProductController {
 		else {
 			System.out.println("인코딩이 multipart/form-data가 아님");
 		}
-		
-		System.out.println(product);
 
 		return "redirect:/product/listProduct?menu=manage";
 	}
@@ -174,15 +167,84 @@ public class ProductController {
 
 	//==> 상품정보 수정 B/L 수행
 	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
-	public String updateProduct( @ModelAttribute("product") Product product ) throws Exception
+	public String updateProduct( 	@ModelAttribute("product") Product product,
+									HttpServletRequest request ) throws Exception
 	{
 		System.out.println("/product/updateProduct : POST");
+		
+		
+		if (FileUpload.isMultipartContent(request))
+		{
+			String tempDir = "C:\\Users\\bitcamp\\git\\MiniPJT\\OwnModel2MVCShopREST\\src\\main\\webapp\\images\\uploadFiles\\";
+			//String tempDir2 = "/uploadFiles/";
 
-		productService.updateProduct(product);
+			DiskFileUpload fileUpload = new DiskFileUpload();
+			fileUpload.setRepositoryPath(tempDir);
+			// setSizeThreshold의 크기를 벗어나면 지정 위치에 임시 저장
+			fileUpload.setSizeMax(1024 * 1024 * 10); // 최대 100MB
+			fileUpload.setSizeThreshold(1024 * 100); // 100KB 까지는 메모리 저장
+			
+			if (request.getContentLength() < fileUpload.getSizeMax())
+			{
+				List<FileItem> fileItemList = fileUpload.parseRequest(request);
+				for (FileItem fileItem : fileItemList) 
+				{
+					if (fileItem.isFormField()) // file 아닌 parameter
+					{
+						if (fileItem.getFieldName().equals("manuDate")) {
+							product.setManuDate(fileItem.getString("euc-kr"));
+						}
+						else if (fileItem.getFieldName().equals("prodName")) {
+							product.setProdName(fileItem.getString("euc-kr"));
+						}
+						else if (fileItem.getFieldName().equals("prodDetail")) {
+							product.setProdDetail(fileItem.getString("euc-kr"));
+						}
+						else if (fileItem.getFieldName().equals("price")) {
+							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));
+						}
+						else if (fileItem.getFieldName().equals("prodNo")) {
+							product.setProdNo(Integer.parseInt(fileItem.getString("euc-kr")));
+						}
+					}
+					else // 파일
+					{
+						if (fileItem.getSize() > 0) 
+						{
+							int idx = fileItem.getName().lastIndexOf("\\");
+							if (idx == -1) {
+								idx = fileItem.getName().lastIndexOf("/");
+							}
+							String fileName = fileItem.getName().substring(idx + 1);
+							product.setFileName(fileName);
+							
+							try {
+								File uploadedFile = new File(tempDir, fileName);
+								fileItem.write(uploadedFile);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						else {
+							product.setFileName("../../images/empty.GIF");
+						}
+					}
+				} //for end
+				productService.updateProduct(product);
+			}
+			else // request.getContentLength() >= fileUpload.getSizeMax()
+			{
+				int overSize = (request.getContentLength() / 1000000);
+				System.out.println("<script>alert(올리신 파일 용량이 1MB 보다 큰 " + overSize + "MB 입니다.);history.back();</script>");
+			}
+		}
+		else {
+			System.out.println("인코딩이 multipart/form-data가 아님");
+		}
 
 		return "redirect:/product/getProduct?prodNo=" + product.getProdNo() + "&menu=ok";
 	}
-
+	
 	//==> 상품목록 검색 후 확인 페이지로 이동
 	@RequestMapping( value="listProduct" )
 	public String listProduct( 	@ModelAttribute("search") Search search, 

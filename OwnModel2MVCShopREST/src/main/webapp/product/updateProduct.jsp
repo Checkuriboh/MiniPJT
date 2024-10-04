@@ -44,10 +44,11 @@
 			}
 	
 			$("form").attr("method", "POST")
+					 .attr("enctype", "multipart/form-data")
 					 .attr("action", "/product/updateProduct")
 					 .submit();
 		}
-
+		
 		//==> Event 발생 처리
 		$(function() {
 			
@@ -165,10 +166,11 @@
 		<td width="104" class="ct_write">상품이미지</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-					<!-- "file" -->
-			<input type="text" name="fileName" class="ct_input_g" 
-					style="width: 200px; height: 19px" maxLength="13"
+					<!-- "text" -->
+			<input type="file" name="fileName" class="ct_input_g" 
+					style="width: 200px; height: 25px" maxLength="13"
 					value="${product.fileName}" />
+			<div><img src="../../images/uploadFiles/${product.fileName}"/></div>
 		</td>
 	</tr>
 	<tr>

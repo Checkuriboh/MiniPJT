@@ -44,6 +44,7 @@
 			}
 
 			$("form").attr("method", "POST")
+					 .attr("enctype", "multipart/form-data")
 					 .attr("action", "/product/addProduct")
 					 .submit();
 		}
@@ -69,7 +70,7 @@
 
 <body bgcolor="#ffffff" text="#000000" style="margin:10px;">
 								
-<form name="detailForm" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" -->
+<form name="detailForm"> <!-- enctype="multipart/form-data" -->
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -161,7 +162,7 @@
 		<td class="ct_write01">
 					<!-- "text" -->
 			<input type="file" name="fileName" class="ct_input_g" 
-					style="width: 200px; height: 19px" maxLength="13"/>
+					style="width: 200px; height: 25px" maxLength="13"/>
 		</td>
 	</tr>
 	<tr>
