@@ -23,8 +23,8 @@
 				self.location = "/purchase/addPurchase?prodNo=${product.prodNo}";
 			});
 			
-			//==> "이전" Event 처리 및 연결
-			$( "td.ct_btn01:contains('이전')" ).bind("click" , function() {
+			//==> "확인" Event 처리 및 연결
+			$( "td.ct_btn01:contains('확인')" ).bind("click" , function() {
 				history.go(-1);
 			});
 		
@@ -156,7 +156,7 @@
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						이전
+						확인
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

@@ -18,23 +18,23 @@
 		function fncPageUp(currentPage) {
 			fncGetProductList(currentPage);
 		}
-
+		
 		//==> 검색 / 페이징
 		function fncGetProductList(currentPage)
 		{	
-			if ( isNaN(Number( $(".ct_input_g[name='searchKeyword']").val() )) )
+			if ( $(".ct_input_g[name='searchCondition']").val() == "0" )
 			{
-				if ( $(".ct_input_g[name='searchCondition']").val() == "0" )
+				if ( isNaN(Number( $(".ct_input_g[name='searchKeyword']").val() )) )
 				{
 					alert("상품번호에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
 			}
-			
-			if ( isNaN(Number( $(".ct_input_g[name='startSearchRange']").val() )) ||
-				 isNaN(Number( $(".ct_input_g[name='endSearchRange']").val() ))		)
+
+			if ( $(".ct_input_g[name='searchCondition']").val() == "2" )
 			{
-				if ( $(".ct_input_g[name='searchCondition']").val() == "2" )
+				if ( isNaN(Number( $(".ct_input_g[name='endSearchRange']").val() ))	 ||
+					 isNaN(Number( $(".ct_input_g[name='startSearchRange']").val() ))	)
 				{
 					alert("상품가격에는 숫자만 입력하셔야 합니다.");
 					return;
@@ -138,7 +138,7 @@
 			$("h7").css("color" , "red");
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
-			$( ".ct_list_pop a" ).css("color", "red").bind('click', function() {
+			$( ".ct_list_pop a" ).css("color", "red").bind("click", function() {
 
 				var prodNo = $(this).parent().parent().next().children("td").attr("id");
 				var thisProd = $(this);
@@ -213,6 +213,19 @@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
 	<tr>
+		
+		<td align="left">
+			<select name="sortColumn" class="ct_input_g" style="width:80px">
+				<option value="0" ${ ! empty search.sortColumn && search.sortColumn==0 ? 'selected' : ''}>등록일</option>
+				<option value="1" ${ ! empty search.sortColumn && search.sortColumn==1 ? 'selected' : ''}>상품명</option>
+				<option value="2" ${ ! empty search.sortColumn && search.sortColumn==2 ? 'selected' : ''}>상품가격</option>
+			</select>
+			<select name="sortOrder" class="ct_input_g" style="width:80px">
+				<option value="0" ${ ! empty search.sortOrder && search.sortOrder==0 ? 'selected' : ''}>오름차순</option>
+				<option value="1" ${ ! empty search.sortOrder && search.sortOrder==1 ? 'selected' : ''}>내림차순</option>
+			</select>
+		</td>
+		
 		<td align="right">
 			<select name="searchCondition" class="ct_input_g" style="width:80px" >
 				<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? 'selected' : ''}>상품번호</option>
@@ -248,6 +261,7 @@
 				</tr>
 			</table>
 		</td>
+		
 	</tr>
 </table>
 

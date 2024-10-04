@@ -68,7 +68,22 @@
 										</if>
 									</where>
 								</if>
-								ORDER BY user_id
+								ORDER BY 
+									<if test="sortColumn == 0 or sortColumn == null">
+										user_id 
+									</if>
+									<if test="sortColumn == 1">
+										user_name 
+									</if>
+									<if test="sortColumn == 2">
+										reg_date 
+									</if>
+										<if test="sortOrder == 0 or sortOrder == null">
+											asc 
+										</if>
+										<if test="sortOrder == 1">
+											desc 
+										</if>
 							) inner_table
 					WHERE ROWNUM &lt;= #{endRowNum}
 				)

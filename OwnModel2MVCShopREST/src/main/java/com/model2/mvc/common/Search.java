@@ -16,8 +16,11 @@ public class Search {
 	private int startRowNum;
 	private int endRowNum;
 	//==> 범위 검색용 Field
-	private int startSearchRange;
-	private int endSearchRange;
+	private String startSearchRange;
+	private String endSearchRange;
+	//==> 목록 정렬용 Field
+	private String sortColumn;
+	private String sortOrder;
 	
 	
 	///Constructor
@@ -64,17 +67,31 @@ public class Search {
 	}
 
 	//==> 범위 검색용 Field get/set
-	public int getStartSearchRange() {
+	public String getStartSearchRange() {
 		return startSearchRange;
 	}
-	public void setStartSearchRange(int startSearchRange) {
+	public void setStartSearchRange(String startSearchRange) {
 		this.startSearchRange = startSearchRange;
 	}
-	public int getEndSearchRange() {
+	public String getEndSearchRange() {
 		return endSearchRange;
 	}
-	public void setEndSearchRange(int endSearchRange) {
+	public void setEndSearchRange(String endSearchRange) {
 		this.endSearchRange = endSearchRange;
+	}
+
+	//==> 목록 정렬용 Field get/set
+	public String getSortColumn() {
+		return sortColumn;
+	}
+	public void setSortColumn(String sortColumn) {
+		this.sortColumn = sortColumn;
+	}
+	public String getSortOrder() {
+		return sortOrder;
+	}
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 	@Override

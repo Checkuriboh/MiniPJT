@@ -71,7 +71,22 @@
 								AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
 							</if>
 						</where>
-						ORDER BY prod_no
+						ORDER BY
+							<if test="sortColumn == 0 or sortColumn == null">
+								prod_no
+							</if>
+							<if test="sortColumn == 1">
+								prod_name
+							</if>
+							<if test="sortColumn == 2">
+								price
+							</if>
+								<if test="sortOrder == 0 or sortOrder == null">
+									asc 
+								</if>
+								<if test="sortOrder == 1">
+									desc 
+								</if>
 					) inner_table
 				WHERE	ROWNUM <![CDATA[<=]]> #{endRowNum} 
 			)

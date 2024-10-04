@@ -133,6 +133,19 @@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
 	<tr>
+		
+		<td align="left">
+			<select name="sortColumn" class="ct_input_g" style="width:80px">
+				<option value="0" ${ ! empty search.sortColumn && search.sortColumn==0 ? 'selected' : ''}>회원ID</option>
+				<option value="1" ${ ! empty search.sortColumn && search.sortColumn==1 ? 'selected' : ''}>회원명</option>
+				<option value="2" ${ ! empty search.sortColumn && search.sortColumn==2 ? 'selected' : ''}>가입일</option>
+			</select>
+			<select name="sortOrder" class="ct_input_g" style="width:80px">
+				<option value="0" ${ ! empty search.sortOrder && search.sortOrder==0 ? 'selected' : ''}>오름차순</option>
+				<option value="1" ${ ! empty search.sortOrder && search.sortOrder==1 ? 'selected' : ''}>내림차순</option>
+			</select>
+		</td>
+		
 		<td align="right">
 			<select name="searchCondition" class="ct_input_g" style="width:80px">
 				<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? 'selected' : ''}>회원ID</option>
@@ -153,6 +166,7 @@
 				</tr>
 			</table>
 		</td>
+		
 	</tr>
 </table>
 
