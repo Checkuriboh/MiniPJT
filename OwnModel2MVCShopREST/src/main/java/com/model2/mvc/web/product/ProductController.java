@@ -86,12 +86,13 @@ public class ProductController {
 				
 			} catch (IOException e) {
 				// 파일 저장 실패 시 빈 파일 저장
-				product.setFileName("../../images/empty.GIF");
+				product.setFileName("empty.GIF");
 				e.printStackTrace();
 			}
 		}
 		else { // 업로드 된 파일이 없으면 빈 파일 저장
-			product.setFileName("../../images/empty.GIF");
+			product.setFileName("empty.GIF");
+//			product.setFileName("../../images/empty.GIF");
 		}
 		
 		// 상품 정보 추가 B/L 수행
