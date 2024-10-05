@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -41,6 +43,10 @@ public class ProductController {
 	
 	@Value("#{commonProperties['pageSize'] ?: 3}")
 	private int pageSize;
+
+	// 이미지 파일 참조 dirPath
+	@Value("#{commonProperties['file.dir'] ?: 'C:/uploadFiles/'}")
+	private String fileDir;
 	
 	
 	///Constructor
@@ -59,80 +65,37 @@ public class ProductController {
 		
 		return "redirect:/product/addProductView.jsp";
 	}
-
+	
 	//==> 상품정보 추가 B/L 수행
 	@RequestMapping( value="addProduct", method=RequestMethod.POST )
 	public String addProduct( 	@ModelAttribute("product") Product product,
-								HttpServletRequest request ) throws Exception
+								@RequestParam("fileData") MultipartFile fileData ) throws Exception
 	{
 		System.out.println("/product/addProduct : POST");
 
-		
-		if (FileUpload.isMultipartContent(request))
+		// 업로드 된 파일이 존재하면 저장
+		if ( !fileData.isEmpty() ) 
 		{
-			String tempDir = "C:\\Users\\bitcamp\\git\\MiniPJT\\OwnModel2MVCShopREST\\src\\main\\webapp\\images\\uploadFiles\\";
-			//String tempDir2 = "/uploadFiles/";
-
-			DiskFileUpload fileUpload = new DiskFileUpload();
-			fileUpload.setRepositoryPath(tempDir);
-			// setSizeThreshold의 크기를 벗어나면 지정 위치에 임시 저장
-			fileUpload.setSizeMax(1024 * 1024 * 10); // 최대 100MB
-			fileUpload.setSizeThreshold(1024 * 100); // 100KB 까지는 메모리 저장
-			
-			if (request.getContentLength() < fileUpload.getSizeMax())
-			{
-				List<FileItem> fileItemList = fileUpload.parseRequest(request);
-				for (FileItem fileItem : fileItemList) 
-				{
-					if (fileItem.isFormField()) // file 아닌 parameter
-					{
-						if (fileItem.getFieldName().equals("manuDate")) {
-							product.setManuDate(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("prodName")) {
-							product.setProdName(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("prodDetail")) {
-							product.setProdDetail(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("price")) {
-							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));
-						}
-					}
-					else // 파일
-					{
-						if (fileItem.getSize() > 0) 
-						{
-							int idx = fileItem.getName().lastIndexOf("\\");
-							if (idx == -1) {
-								idx = fileItem.getName().lastIndexOf("/");
-							}
-							String fileName = fileItem.getName().substring(idx + 1);
-							product.setFileName(fileName);
-							
-							try {
-								File uploadedFile = new File(tempDir, fileName);
-								fileItem.write(uploadedFile);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						else {
-							product.setFileName("../../images/empty.GIF");
-						}
-					}
-				} //for end
-				productService.addProduct(product);
-			}
-			else // request.getContentLength() >= fileUpload.getSizeMax()
-			{
-				int overSize = (request.getContentLength() / 1000000);
-				System.out.println("<script>alert(올리신 파일 용량이 1MB 보다 큰 " + overSize + "MB 입니다.);history.back();</script>");
+			// 파일 이름으로 랜덤한 ID 부여
+			String fileName = UUID.randomUUID().toString() + "." + fileData.getContentType().substring(6);
+					
+			try {
+				// 파일 저장 + 성공 시 상품에 파일 이름 저장
+				fileData.transferTo(new File(fileDir, fileName));
+				product.setFileName(fileName);
+				
+			} catch (IOException e) {
+				// 파일 저장 실패 시 빈 파일 저장
+				product.setFileName("../../images/empty.GIF");
+				e.printStackTrace();
 			}
 		}
-		else {
-			System.out.println("인코딩이 multipart/form-data가 아님");
+		else { // 업로드 된 파일이 없으면 빈 파일 저장
+			product.setFileName("../../images/empty.GIF");
 		}
+		
+		// 상품 정보 추가 B/L 수행
+		productService.addProduct(product);
 
 		return "redirect:/product/listProduct?menu=manage";
 	}
@@ -168,81 +131,35 @@ public class ProductController {
 	//==> 상품정보 수정 B/L 수행
 	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
 	public String updateProduct( 	@ModelAttribute("product") Product product,
-									HttpServletRequest request ) throws Exception
+									@RequestParam("fileData") MultipartFile fileData ) throws Exception
 	{
 		System.out.println("/product/updateProduct : POST");
 		
-		
-		if (FileUpload.isMultipartContent(request))
+		// 업로드 된 파일이 존재하면 저장
+		if ( !fileData.isEmpty() ) 
 		{
-			String tempDir = "C:\\Users\\bitcamp\\git\\MiniPJT\\OwnModel2MVCShopREST\\src\\main\\webapp\\images\\uploadFiles\\";
-			//String tempDir2 = "/uploadFiles/";
-
-			DiskFileUpload fileUpload = new DiskFileUpload();
-			fileUpload.setRepositoryPath(tempDir);
-			// setSizeThreshold의 크기를 벗어나면 지정 위치에 임시 저장
-			fileUpload.setSizeMax(1024 * 1024 * 10); // 최대 100MB
-			fileUpload.setSizeThreshold(1024 * 100); // 100KB 까지는 메모리 저장
+			// 파일 이름으로 랜덤한 ID 부여
+			String fileName = UUID.randomUUID().toString() + "." + fileData.getContentType().substring(6);
 			
-			if (request.getContentLength() < fileUpload.getSizeMax())
-			{
-				List<FileItem> fileItemList = fileUpload.parseRequest(request);
-				for (FileItem fileItem : fileItemList) 
-				{
-					if (fileItem.isFormField()) // file 아닌 parameter
-					{
-						if (fileItem.getFieldName().equals("manuDate")) {
-							product.setManuDate(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("prodName")) {
-							product.setProdName(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("prodDetail")) {
-							product.setProdDetail(fileItem.getString("euc-kr"));
-						}
-						else if (fileItem.getFieldName().equals("price")) {
-							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));
-						}
-						else if (fileItem.getFieldName().equals("prodNo")) {
-							product.setProdNo(Integer.parseInt(fileItem.getString("euc-kr")));
-						}
-					}
-					else // 파일
-					{
-						if (fileItem.getSize() > 0) 
-						{
-							int idx = fileItem.getName().lastIndexOf("\\");
-							if (idx == -1) {
-								idx = fileItem.getName().lastIndexOf("/");
-							}
-							String fileName = fileItem.getName().substring(idx + 1);
-							product.setFileName(fileName);
-							
-							try {
-								File uploadedFile = new File(tempDir, fileName);
-								fileItem.write(uploadedFile);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						else {
-							product.setFileName("../../images/empty.GIF");
-						}
-					}
-				} //for end
-				productService.updateProduct(product);
-			}
-			else // request.getContentLength() >= fileUpload.getSizeMax()
-			{
-				int overSize = (request.getContentLength() / 1000000);
-				System.out.println("<script>alert(올리신 파일 용량이 1MB 보다 큰 " + overSize + "MB 입니다.);history.back();</script>");
+			try {
+				// 파일 저장 + 성공 시 상품에 파일 이름 저장
+				fileData.transferTo(new File(fileDir, fileName));
+				product.setFileName(fileName);
+				
+			} catch (IOException e) {
+				// 파일 저장 실패 시 빈 파일 저장
+				product.setFileName("../../images/empty.GIF");
+				e.printStackTrace();
 			}
 		}
-		else {
-			System.out.println("인코딩이 multipart/form-data가 아님");
+		else { // 업로드 된 파일이 없으면 빈 파일 저장
+			product.setFileName("../../images/empty.GIF");
 		}
+		
+		// 상품 정보 갱신 B/L 수행
+		productService.updateProduct(product);
 
-		return "redirect:/product/getProduct?prodNo=" + product.getProdNo() + "&menu=ok";
+		return "redirect:/product/getProduct?prodNo=" + product.getProdNo();
 	}
 	
 	//==> 상품목록 검색 후 확인 페이지로 이동

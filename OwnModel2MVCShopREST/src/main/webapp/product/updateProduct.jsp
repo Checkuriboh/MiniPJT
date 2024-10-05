@@ -70,7 +70,7 @@
 
 <body bgcolor="#ffffff" text="#000000" style="margin:10px;">
 
-<form name="detailForm"> <!-- enctype="multipart/form-data" -->
+<form name="detailForm" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" -->
 
 <input type="hidden" name="prodNo" value="${product.prodNo}"/>
 
@@ -166,11 +166,10 @@
 		<td width="104" class="ct_write">상품이미지</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-					<!-- "text" -->
-			<input type="file" name="fileName" class="ct_input_g" 
-					style="width: 200px; height: 25px" maxLength="13"
-					value="${product.fileName}" />
-			<div><img src="../../images/uploadFiles/${product.fileName}"/></div>
+					<!-- "text"		"fileName" -->
+			<input type="file" name="fileData" class="ct_input_g" 
+					style="width: 200px; height: 25px" maxLength="13" />
+			<div><img src="/product/json/getImageFile/${product.fileName}"/></div>
 		</td>
 	</tr>
 	<tr>
