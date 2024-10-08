@@ -24,7 +24,7 @@ public class StringUtil {
 	
 	public static String toDateStr(String dateStr, int len)
 	{		
-		if (dateStr == null){
+		if ( dateStr == null || dateStr.isEmpty() ) {
 			return "";
 		}
 		
