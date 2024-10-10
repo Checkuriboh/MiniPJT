@@ -73,13 +73,13 @@
 		$(function() {
 			
 			//==> "등록" Event 연결
-			$( "button.btn.btn-primary" ).bind("click" , function() {
+			$( "button.btn-primary" ).bind("click" , function() {
 				fncAddProduct();
 			});
 			
 			//==> "취소" Event 처리 및 연결
-			$( "a[href='#']" ).bind("click" , function() {
-				$("form")[0].reset();
+			$( "form-group a[href='#']" ).bind("click" , function() {
+				history.go(-1);
 			});
 			
 			//==> 제조일자 달력 버튼 클릭 Event
@@ -109,7 +109,7 @@
 	<div class="container">
 	
 		<div class="page-header">
-			<h3 class=" text-info">상품등록</h3>
+			<h3 class="text-info">상품등록</h3>
 	    </div>
 	    
 		<!-- form Start ////////////////////////////////////////// -->
@@ -171,7 +171,7 @@
 			    <div class="col-sm-3">
 				    <input type="file" name="fileData">
 					<img src="/product/json/getImageFile/dog2.jpg" alt="..." 
-						class="img-rounded" style="margin-top:10px; margin-right:10px;">
+							class="img-rounded" style="margin-top:10px; margin-right:10px;">
 				</div>
 			</div>
 		    
