@@ -114,6 +114,9 @@
 		<!-- form Start ////////////////////////////////////////// -->
 		<form class="form-horizontal">
 		
+			<!-- 상품번호 -->
+			<input type="hidden" name="prodNo" value="${product.prodNo}"/>
+		
 			<!-- 상품명 -->
 			<div class="form-group">
 				<label for="prodName" class="col-sm-2 control-label">상품명</label>

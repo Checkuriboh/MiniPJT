@@ -51,7 +51,31 @@
 					return;
 				}
 				
-				$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
+				$.ajax( 
+						{
+							url : "/user/json/login",
+							method : "POST" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							data : JSON.stringify({
+								userId : id,
+								password : pw
+							}),
+							success : function(JSONData , status) {
+								
+								if( JSONData != null ) {
+									self.location = "/user/login";
+								}
+								
+							},
+							error : function() {
+								alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
+							}
+					});
+				// ajax end
 			});
 		});	
 		
