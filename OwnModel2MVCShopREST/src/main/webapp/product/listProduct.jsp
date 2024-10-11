@@ -39,19 +39,19 @@
 		//==> 검색 / 페이징
 		function fncGetProductList(currentPage)
 		{	
-			if ( $(".ct_input_g[name='searchCondition']").val() == "0" )
+			if ( $(".from-control[name='searchCondition']").val() == "0" )
 			{
-				if ( isNaN(Number( $(".ct_input_g[name='searchKeyword']").val() )) )
+				if ( isNaN(Number( $(".from-control[name='searchKeyword']").val() )) )
 				{
 					alert("상품번호에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
 			}
 
-			if ( $(".ct_input_g[name='searchCondition']").val() == "2" )
+			if ( $(".form-control[name='searchCondition']").val() == "2" )
 			{
-				if ( isNaN(Number( $(".ct_input_g[name='endSearchRange']").val() ))	 ||
-					 isNaN(Number( $(".ct_input_g[name='startSearchRange']").val() ))	)
+				if ( isNaN(Number( $(".from-control[name='endSearchRange']").val() ))	 ||
+					 isNaN(Number( $(".from-control[name='startSearchRange']").val() ))	)
 				{
 					alert("상품가격에는 숫자만 입력하셔야 합니다.");
 					return;
@@ -69,9 +69,24 @@
 		$(function() {
 			
 			//==> 검색
-			$( "td.ct_btn01:contains('검색')" ).bind("click", function() {
+			$( "button.btn.btn-default" ).bind("click", function() {
 				fncGetProductList(1);
 			});
+
+			//==> 가격 범위 검색
+			$( "input[aria-label='price']" ).bind('change', function() {
+				rangeSearch($(this));
+			});
+			rangeSearch($( "input[aria-label='price']" ));
+			
+			function rangeSearch(element) {
+				if (element.is(":checked")) {
+					element.parent().siblings(".form-control").attr("readonly", false);
+				}
+				else {
+					element.parent().siblings(".form-control").attr("readonly", true);
+				}
+			}
 			
 			/* 
 			//==> 검색 설정 변경 Event 발생 시 입력 창 변경
@@ -88,8 +103,8 @@
 					$("span:contains('~')").css("display", "none");
 				}
 				
-			});
-			 */
+			}); 
+			*/
 			
 			
 			//==> manage 일 때 구매된 상품명 click Event
@@ -97,7 +112,7 @@
 			{
 				$( "tr:has( span:not(:contains('판매중')) ) td:nth-child(2)" ).bind("click", function() {
 					
-					var prodNo = $(this).siblings(':last').children("i").attr("id");
+					var prodNo = $(this).siblings(":last").children("i").attr("id");
 					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;	
 					
 				}).css("color", "blue");
@@ -281,20 +296,26 @@
 					  	
 					<!-- 검색 버튼 -->
 					<button type="button" class="btn btn-default">검색</button>
-					<%-- 
-					<div class="form-group" style="display:${ search.searchCondition==2 ? 'inline-block' : 'none'};">
-						<label class="sr-only" for="startSearchRange">최소금액</label>
-						<input type="text" class="form-control" name="startSearchRange" 
-								placeholder="최소금액" value="${search.startSearchRange}">
-									 ~ 
-						<label class="sr-only" for="endSearchRange">최대금액</label>
-						<input type="text" class="form-control" name="endSearchRange" 
-								placeholder="최대금액" value="${search.endSearchRange}">
+
+
+					<!-- 가격 -->
+					<div class="form-group text-right" style="margin:8px;">
+						<div class="input-group col-md-10">
+							<span class="input-group-addon">
+								가격범위 
+								<input type="checkbox" aria-label="price" ${ !empty search.endSearchRange ? 'checked' : '' }>
+							</span>
+							<input type="text" class="form-control" name="startSearchRange" readonly
+									placeholder="최소금액" value="${search.startSearchRange}">
+				      		<div class="input-group-addon"> ~ </div>
+							<input type="text" class="form-control" name="endSearchRange" readonly
+									placeholder="최대금액" value="${search.endSearchRange}">
+						</div>
 					</div>
-					--%>
+					
 					<!-- PageNavigation 선택 페이지 값을 보내는 부분 -->
 					<input type="hidden" id="currentPage" name="currentPage" value=""/>
-				
+					
 				</form>
 			</div>
 			
@@ -302,7 +323,7 @@
 	    <!-- table 위쪽 검색 end /////////////////////////////////////-->
 		
 	    <!--  table Start /////////////////////////////////////-->
-      	<table class="table table-hover table-striped" >
+      	<table class="table table-hover table-striped">
       
       		<thead>
 				<tr>
