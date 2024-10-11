@@ -116,17 +116,17 @@
 		<hr/>
 		
 		<!-- 구매/이전 결정 -->
-		<div class="form-group">
-			<div class="col-sm-offset-4  col-sm-4 text-center">
-				<c:if test="${ (product.proTranCode == null ) && (user.role == 'user') }">
-					<button type="button" class="btn btn-primary">구&nbsp;매</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				</c:if>
-				<a class="btn btn-primary btn" href="#" role="button">확&nbsp;인</a>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-offset-4  col-sm-4 text-center">
+					<c:if test="${ (product.proTranCode == null ) && (user.role == 'user') }">
+						<button type="button" class="btn btn-primary">구&nbsp;매</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</c:if>
+					<a class="btn btn-primary btn" href="#" role="button">확&nbsp;인</a>
+				</div>
 			</div>
-		</div>
-		
-		<br/>
+		</form>
 		
  	</div>
  	<!-- 화면구성 div end ////////////////////////////////////// -->

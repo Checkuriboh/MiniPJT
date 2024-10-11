@@ -21,14 +21,14 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
 	
 	
-	<!-- ///////////////////////// CSS ////////////////////////// -->
+	<!-- //////////////////////// CSS //////////////////////// -->
 	<style>
  		body {
             padding-top : 50px;
         }
     </style>
 
-	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<!-- //////////////////// JavaScript //////////////////// -->
 	<script type="text/javascript">	
 
 		//==> pageNavigator 연동
@@ -73,6 +73,7 @@
 				fncGetProductList(1);
 			});
 			
+			/* 
 			//==> 검색 설정 변경 Event 발생 시 입력 창 변경
 			$( "select[name='searchCondition']" ).bind("change", function() {
 				
@@ -88,66 +89,27 @@
 				}
 				
 			});
-
-			
-			//==> No 클릭 시 상세정보 출력
-			$( ".ct_list_pop td:nth-child(1)" ).bind("click", function() {
-				
-				var prodNo = $(this).parent().next().children("td").attr("id");
-				
-				$.ajax(
-						{
-							url : "/product/json/getProduct/"+prodNo ,
-							method : "GET" ,
-							dataType : "json" ,
-							headers : {
-								"Accept" : "application/json",
-								"Content-Type" : "application/json"
-							},
-							success : function(JSONData , status) {
-								
-								var displayValue = "<h3>"
-													+"&nbsp; 상품명 : "+JSONData.prodName+"<br>"
-													+"&nbsp; 상세정보 : "+JSONData.prodDetail+"<br>"
-													+"&nbsp; 제조일 : "+JSONData.manuDate+"<br>"
-													+"&nbsp; 가 격 : "+JSONData.price+"<br>"
-													+"&nbsp; 등록일 : "+JSONData.regDateString+"<br>"
-													+"</h3>";
-
-								var thisProd = $( "#"+prodNo+"" );
-								
-								if (thisProd.html() != displayValue) 
-								{
-									$("h3").remove();
-									thisProd.html(displayValue);
-								}
-								else {
-									thisProd.html("");
-								}
-								
-							}
-						}
-				);
-				// ajax end
-			});
+			 */
 			
 			
 			//==> manage 일 때 구매된 상품명 click Event
 			if ( ${ param.menu == 'manage' } ) 
 			{
-				$( ".ct_list_pop:has(span:not(:contains('판매중'))) td:nth-child(3)" ).bind("click", function() {
+				$( "tr:has( span:not(:contains('판매중')) ) td:nth-child(2)" ).bind("click", function() {
 					
-					var prodNo = $(this).parent().next().children("td").attr("id");
+					var prodNo = $(this).siblings(':last').children("i").attr("id");
 					self.location = "/product/getProduct?menu=search&prodNo="+prodNo;	
 					
 				}).css("color", "blue");
+				//==> click event 적용된 상품명 색 변경
 			}
 			
 			//==> '판매중' 상품명 click Event 연결 및 처리
-			$( ".ct_list_pop:has(span:contains('판매중')) td:nth-child(3)" ).bind("click", function() {
+			//$( ".ct_list_pop:has(span:contains('판매중')) td:nth-child(3)" ).bind("click", function() {
+			$( "tr:has(span:contains('판매중')) td:nth-child(2)" ).bind("click", function() {
 					
-				var prodNo = $(this).parent().next().children("td").attr("id");
-
+				var prodNo = $(this).siblings(':last').children("i").attr("id");
+				
 				if ( ${ param.menu == 'manage' } ) 
 				{
 					self.location = "/product/updateProduct?menu=manage&prodNo="+prodNo;
@@ -158,16 +120,16 @@
 				}
 			
 			}).css("color", "red"); 
-			//==> click 가능한 상품명 색 변경
+			//==> click event 적용된 상품명 색 변경
 			
 			//==> (click:상세정보) 색 변경
-			$("h7").css("color" , "red");
+			//$("h7").css("color" , "red");
 			
 			
 			//==> 배송하기 click Event -> 상품상태 변경(배송중)
-			$( ".ct_list_pop a" ).css("color", "red").bind("click", function() {
+			$( "tr > td > a" ).css("color", "red").bind("click", function() {
 
-				var prodNo = $(this).parent().parent().next().children("td").attr("id");
+				var prodNo = $(this).parent().next().children("i").attr("id");
 				var thisProd = $(this);
 				
 				//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo;
@@ -201,8 +163,50 @@
 			});
 			
 			
+			//==> 간략정보 클릭 시 상세정보 출력
+			//$( ".ct_list_pop td:nth-child(1)" ).bind("click", function() {
+			$( "td:nth-child(6) > i" ).bind("click", function() {
+			
+				var prodNo = $(this).attr("id");
+				
+				$.ajax(
+						{
+							url : "/product/json/getProduct/"+prodNo ,
+							method : "GET" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							success : function(JSONData , status) {
+								
+								var displayValue = "<h6>"
+													+"상품명 : "+JSONData.prodName+"<br>"
+													+"상세정보 : "+JSONData.prodDetail+"<br>"
+													+"제조일 : "+JSONData.manuDate+"<br>"
+													+"가 격 : "+JSONData.price+"<br>"
+													+"등록일 : "+JSONData.regDateString+"<br>"
+													+"</h6>";
+
+								var thisProd = $( "i[id='"+prodNo+"']" );
+								
+								if (thisProd.html() != displayValue) 
+								{
+									$("h6").remove();
+									thisProd.html(displayValue);
+								}
+								else {
+									thisProd.html("");
+								}
+								
+							}
+						}
+				);
+				// ajax end
+			});
+			
 			//==> 짝수번째 row 배경색 변경			
-			$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
+			//$( ".ct_list_pop:odd" ).css("background-color" , "whitesmoke");
 			
 		});
 
@@ -216,157 +220,143 @@
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////// -->
 
-<form name="detailForm">
-
-<table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
-	<tr>
-		<td width="15" height="37">
-			<img src="/images/ct_ttl_img01.gif" width="15" height="37"/>
-		</td>
-		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left:10px;">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="93%" class="ct_ttl01">
-						<c:if test="${ param.menu == 'manage' }">
-							상품 관리
-						</c:if>
-						<c:if test="${ param.menu == 'search' }">
-							상품 목록조회
-						</c:if>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td width="12" height="37">
-			<img src="/images/ct_ttl_img03.gif" width="12" height="37"/>
-		</td>
-	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>
-		
-		<td align="left">
-			<select name="sortColumn" class="ct_input_g" style="width:80px">
-				<option value="0" ${ ! empty search.sortColumn && search.sortColumn==0 ? 'selected' : ''}>등록일</option>
-				<option value="1" ${ ! empty search.sortColumn && search.sortColumn==1 ? 'selected' : ''}>상품명</option>
-				<option value="2" ${ ! empty search.sortColumn && search.sortColumn==2 ? 'selected' : ''}>상품가격</option>
-			</select>
-			<select name="sortOrder" class="ct_input_g" style="width:80px">
-				<option value="0" ${ ! empty search.sortOrder && search.sortOrder==0 ? 'selected' : ''}>오름차순</option>
-				<option value="1" ${ ! empty search.sortOrder && search.sortOrder==1 ? 'selected' : ''}>내림차순</option>
-			</select>
-		</td>
-		
-		<td align="right">
-			<select name="searchCondition" class="ct_input_g" style="width:80px" >
-				<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? 'selected' : ''}>상품번호</option>
-				<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? 'selected' : ''}>상품명</option>
-				<option value="2" ${ ! empty search.searchCondition && search.searchCondition==2 ? 'selected' : ''}>상품가격</option>
-			</select>
-			
-			<span style="display:${ ! empty search.searchCondition && search.searchCondition==2 ? 'none' : 'inline-block'};">
-				<input type="text" name="searchKeyword" value="${search.searchKeyword}" 
-						class="ct_input_g" style="width:200px; height:19px" />
-			</span>
-			
-			<span style="display:${ ! empty search.searchCondition && search.searchCondition==2 ? 'inline-block' : 'none'}; 
-						 width:200px;">
-				<input type="text" name="startSearchRange" value="${search.startSearchRange}" 
-						class="ct_input_g" style="width:90px; height:19px" /> ~ 
-				<input type="text" name="endSearchRange" value="${search.endSearchRange}" 
-						class="ct_input_g" style="width:90px; height:19px" />
-			</span>
-		</td>
-		<td align="right" width="70">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23">
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						검색
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23">
-					</td>
-				</tr>
-			</table>
-		</td>
-		
-	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>
-		<td colspan="11" >전체 ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage} 페이지</td>
-	</tr>
-	<tr>
-		<td class="ct_list_b" width="100">No</td>
-		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">
-			상품명<br> <h7>(click:상세정보)</h7>
-		</td>
-		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">가격</td>
-		<td class="ct_line02"></td>
-		<td class="ct_list_b">등록일</td>	
-		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="500">현재상태</td>	
-	</tr>
-	<tr>
-		<td colspan="11" bgcolor="808285" height="1"></td>
-	</tr>
+	<!-- 화면구성 div Start ///////////////////////////////////// -->
+	<div class="container">
 	
-	<c:set var="i" value="0" />
-	<c:forEach var="product" items="${list}">
-		<c:set var="i" value="${ i+1 }" />
-		
-		<tr class="ct_list_pop">
-			<td align="center"> ${i} </td>
-			<td></td>
-			<td align="left">${product.prodName}</td>
-			<td></td>
-			<td align="left">${product.price}</td>
-			<td></td>
-			<td align="left">${product.regDate}</td>
-			<td></td>
-			<td align="left">
-				<span>
-					<c:if test="${ param.menu=='manage' }">${product.proTranCodeString}</c:if>
-					<c:if test="${ param.menu=='search' }">
-						${ (empty product.proTranCode) ? '판매중' : '재고 없음' }
-					</c:if>
-				</span>
-				<a>
-					${ (param.menu=='manage' && product.proTranCode=='1') ? '배송하기' : '' }
-				</a>
-			</td>
-		</tr>
-		
-		<tr>
-			<td colspan="11" bgcolor="D6D7D6" height="1" id="${product.prodNo}"></td>
-		</tr>
-		
-	</c:forEach>
-
-</table>
-
-<!-- 페이지 네비게이터 -->
-<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top:10px;">
-	<tr>
-		<td align="center">
-			<input type="hidden" id="currentPage" name="currentPage" value=""/>
+		<div class="page-header text-info">
+			<h3>
+				<c:if test="${ param.menu == 'manage' }">
+					상품관리
+				</c:if>
+				<c:if test="${ param.menu == 'search' }">
+					상품목록조회
+				</c:if>
+			</h3>
+	    </div>
+	    
+	    <!-- table 위쪽 검색 Start /////////////////////////////////////-->
+	    <div class="row">
+	    
+	    	<div class="col-md-5 text-left">
+				<p class="text-primary">
+		    		전체  ${resultPage.totalCount} 건수, 현재 ${resultPage.currentPage} 페이지
+		    	</p>
+		    </div>
+	    
+		    <div class="col-md-7 text-right">
+		    	<!-- 검색 form -->
+				<form class="form-inline" name="detailForm">
+				
+					<!-- 정렬기준 -->
+					<div class="form-group">
+						<select class="form-control" name="sortColumn">
+							<option value="0" ${ ! empty search.sortColumn && search.sortColumn==0 ? 'selected' : ''}>등록일</option>
+							<option value="1" ${ ! empty search.sortColumn && search.sortColumn==1 ? 'selected' : ''}>상품명</option>
+							<option value="2" ${ ! empty search.sortColumn && search.sortColumn==2 ? 'selected' : ''}>상품가격</option>
+						</select>
+				  	</div>
+				  	<!-- 정렬순서 -->
+					<div class="form-group">
+						<select class="form-control" name="sortOrder">
+							<option value="0" ${ ! empty search.sortOrder && search.sortOrder==0 ? 'selected' : ''}>오름차순</option>
+							<option value="1" ${ ! empty search.sortOrder && search.sortOrder==1 ? 'selected' : ''}>내림차순</option>
+						</select>
+				  	</div>
+					&nbsp;
+						
+					<!-- 검색기준 -->
+					<div class="form-group">
+						<select class="form-control" name="searchCondition">
+							<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? 'selected' : ''}>상품번호</option>
+							<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? 'selected' : ''}>상품명</option>
+							<option value="2" ${ ! empty search.searchCondition && search.searchCondition==2 ? 'selected' : ''}>상품가격</option>
+						</select>
+				  	</div>
+				  	<!-- 검색어 -->
+					<div class="form-group" <%-- style="display:${ search.searchCondition==2 ? 'none' : 'inline-block'};" --%>>
+						<label class="sr-only" for="searchKeyword">검색어</label>
+						<input type="text" class="form-control" name="searchKeyword" placeholder="검색어"
+								value="${ ! empty search.searchKeyword ? search.searchKeyword : '' }">
+					</div>
+					  	
+					<!-- 검색 버튼 -->
+					<button type="button" class="btn btn-default">검색</button>
+					<%-- 
+					<div class="form-group" style="display:${ search.searchCondition==2 ? 'inline-block' : 'none'};">
+						<label class="sr-only" for="startSearchRange">최소금액</label>
+						<input type="text" class="form-control" name="startSearchRange" 
+								placeholder="최소금액" value="${search.startSearchRange}">
+									 ~ 
+						<label class="sr-only" for="endSearchRange">최대금액</label>
+						<input type="text" class="form-control" name="endSearchRange" 
+								placeholder="최대금액" value="${search.endSearchRange}">
+					</div>
+					--%>
+					<!-- PageNavigation 선택 페이지 값을 보내는 부분 -->
+					<input type="hidden" id="currentPage" name="currentPage" value=""/>
+				
+				</form>
+			</div>
 			
-			<c:if test="${ resultPage.totalCount > 0 }">
-				<jsp:include page="/common/pageNavigator.jsp"/>
-			</c:if>
+	    </div>
+	    <!-- table 위쪽 검색 end /////////////////////////////////////-->
+		
+	    <!--  table Start /////////////////////////////////////-->
+      	<table class="table table-hover table-striped" >
+      
+      		<thead>
+				<tr>
+		            <th align="center">No</th>
+		            <th align="left">상품명</th>
+		            <th align="left">가격</th>
+		            <th align="left">등록일</th>
+		            <th align="left">현재상태</th>
+		            <th align="left">간략정보</th>
+	          	</tr>
+			</thead>
+      
+			<tbody>
+				<!-- 상품 정보 목록 출력 -->
+				<c:set var="i" value="0" />
+				<c:forEach var="product" items="${list}">
+					<c:set var="i" value="${ i+1 }" />
+					
+					<tr>
+					  	<td align="center">${ i }</td>
+					  	<td align="left" title="Click : 상품정보 확인">
+					  		${product.prodName}
+					  	</td>
+					  	<td align="left">${product.price}</td>
+					  	<td align="left">${product.regDate}</td>
+					  	<td>
+							<span>
+								<c:if test="${ param.menu=='manage' }">${product.proTranCodeString}</c:if>
+								<c:if test="${ param.menu=='search' }">
+									${ (empty product.proTranCode) ? '판매중' : '재고 없음' }
+								</c:if>
+							</span>
+							<a>
+								${ (param.menu=='manage' && product.proTranCode=='1') ? '배송하기' : '' }
+							</a>
+					  	</td>
+					  	<td align="left">
+					  		<i class="glyphicon glyphicon-ok" id="${product.prodNo}"></i>
+					  		<input type="hidden" value="${product.prodNo}">
+					  	</td>
+					</tr>
+					
+				</c:forEach>
+			</tbody>
 			
-    	</td>
-	</tr>
-</table>
-	
-</form>
+      	</table>
+		<!-- table End ///////////////////////////////////// -->
+	  
+	</div>
+ 	<!--  화면구성 div End ///////////////////////////////////// -->
+ 	
+ 	<!-- PageNavigation Start... -->
+	<jsp:include page="../common/pageNavigator_new.jsp"/>
+	<!-- PageNavigation End... -->
 
 </body>
 
