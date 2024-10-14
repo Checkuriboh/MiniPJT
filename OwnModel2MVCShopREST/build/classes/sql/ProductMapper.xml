@@ -67,8 +67,16 @@
 									AND prod_name LIKE '%${searchKeyword}%'
 								</if>
 							</if>
-							<if test="searchCondition == 2 and endSearchRange > 0" >
-								AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
+							<if test="startSearchRange != null and endSearchRange != null">
+								<if test="startSearchRange == '' and endSearchRange != '' ">
+									AND price <![CDATA[<=]]> #{endSearchRange}
+								</if>
+								<if test="startSearchRange != '' and endSearchRange == '' ">
+									AND price <![CDATA[>=]]> #{startSearchRange}
+								</if>
+								<if test="startSearchRange != '' and endSearchRange != '' ">
+									AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
+								</if>
 							</if>
 						</where>
 						ORDER BY
@@ -108,11 +116,27 @@
 							AND prod_name LIKE '%${searchKeyword}%'
 						</if>
 					</if>
-					<if test="searchCondition == 2 and endSearchRange > 0" >
-						AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
-					</if>
+					
+							<if test="startSearchRange != null and endSearchRange != null">
+								<if test="startSearchRange == '' and endSearchRange != '' ">
+									AND price <![CDATA[<=]]> #{endSearchRange}
+								</if>
+								<if test="startSearchRange != '' and endSearchRange == '' ">
+									AND price <![CDATA[>=]]> #{startSearchRange}
+								</if>
+								<if test="startSearchRange != '' and endSearchRange != '' ">
+									AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
+								</if>
+							</if>
+					<!-- 
+					<if test="startSearchRange != null and startSearchRange != '' and
+								endSearchRange != null and endSearchRange != '' ">
+						<if test="endSearchRange >= startSearchRange">
+							AND price BETWEEN #{startSearchRange} AND #{endSearchRange}
+						</if>
+					</if> -->
 				</where>
-			) countTable			
+			) countTable
 	</select>
 	
 </mapper>

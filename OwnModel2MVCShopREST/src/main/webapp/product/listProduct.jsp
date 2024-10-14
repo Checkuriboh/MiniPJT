@@ -38,24 +38,44 @@
 		
 		//==> 검색 / 페이징
 		function fncGetProductList(currentPage)
-		{	
-			if ( $(".from-control[name='searchCondition']").val() == "0" )
+		{		 
+			if ( $(".form-control[name='searchCondition']").val() == "0" )
 			{
-				if ( isNaN(Number( $(".from-control[name='searchKeyword']").val() )) )
+				if ( isNaN(Number( $(".form-control[name='searchKeyword']").val() )) )
 				{
 					alert("상품번호에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
 			}
 
-			if ( $(".form-control[name='searchCondition']").val() == "2" )
+			var startPrice = $(".form-control[name='startSearchRange']");
+			var endPrice = $(".form-control[name='endSearchRange']");
+
+			if ( $( "input[aria-label='price']" ).is(":checked") &&
+				 ( (startPrice.val() != "") || (endPrice.val() != "") ) )
 			{
-				if ( isNaN(Number( $(".from-control[name='endSearchRange']").val() ))	 ||
-					 isNaN(Number( $(".from-control[name='startSearchRange']").val() ))	)
+				if ( isNaN( Number(startPrice.val()) ) ||
+					 isNaN( Number( endPrice.val() ) )	)
 				{
 					alert("상품가격에는 숫자만 입력하셔야 합니다.");
 					return;
 				}
+				else if ( (startPrice.val() < 0) || (endPrice.val() < 0) ) 
+				{
+					alert("상품가격은 0보다 작을 수 없습니다.");
+					return;
+				}
+				else if ( ( Number(startPrice.val()) > Number(endPrice.val()) ) &&
+						  ( (startPrice.val() != "") && (endPrice.val() != "") ) )
+				{
+					alert("최대금액은 최소금액보다 작을 수 없습니다.");
+					return;
+				}
+			}
+			else 
+			{
+				startPrice.val("");
+				endPrice.val("");
 			}
 			
 			$("#currentPage").val(currentPage)
@@ -73,20 +93,37 @@
 				fncGetProductList(1);
 			});
 
-			//==> 가격 범위 검색
+			//==> 가격 범위 검색 on/off
 			$( "input[aria-label='price']" ).bind('change', function() {
-				rangeSearch($(this));
-			});
-			rangeSearch($( "input[aria-label='price']" ));
-			
-			function rangeSearch(element) {
-				if (element.is(":checked")) {
-					element.parent().siblings(".form-control").attr("readonly", false);
-				}
+
+				if ($(this).is(":checked")) {
+					$(this).parent().siblings(".form-control").attr("readonly", false);
+				} 
 				else {
-					element.parent().siblings(".form-control").attr("readonly", true);
+					$(this).parent().siblings(".form-control").attr("readonly", true);
 				}
-			}
+			});
+			
+			//==> 가격 범위 검색 초기화
+			$(function() {
+			
+				var priceRange = $( "input[aria-label='price']" );
+				var startPrice = $(".form-control[name='startSearchRange']");
+				var endPrice = $(".form-control[name='endSearchRange']");
+			
+				if ( (startPrice.val() == "") && (endPrice.val() == "") ) 
+				{
+					priceRange.attr("checked", false);
+					startPrice.val("").attr("readonly", true);
+					endPrice.val("").attr("readonly", true);
+				}
+				else 
+				{
+					priceRange.attr("checked", true);
+					startPrice.attr("readonly", false);
+					endPrice.attr("readonly", false);
+				}
+			});
 			
 			/* 
 			//==> 검색 설정 변경 Event 발생 시 입력 창 변경
@@ -302,13 +339,13 @@
 					<div class="form-group text-right" style="margin:8px;">
 						<div class="input-group col-md-10">
 							<span class="input-group-addon">
-								가격범위 
-								<input type="checkbox" aria-label="price" ${ !empty search.endSearchRange ? 'checked' : '' }>
+								가격범위
+								<input type="checkbox" aria-label="price">
 							</span>
-							<input type="text" class="form-control" name="startSearchRange" readonly
+							<input type="text" class="form-control" name="startSearchRange"
 									placeholder="최소금액" value="${search.startSearchRange}">
 				      		<div class="input-group-addon"> ~ </div>
-							<input type="text" class="form-control" name="endSearchRange" readonly
+							<input type="text" class="form-control" name="endSearchRange"
 									placeholder="최대금액" value="${search.endSearchRange}">
 						</div>
 					</div>
@@ -322,7 +359,7 @@
 	    </div>
 	    <!-- table 위쪽 검색 end /////////////////////////////////////-->
 		
-	    <!--  table Start /////////////////////////////////////-->
+	    <!-- table Start /////////////////////////////////////-->
       	<table class="table table-hover table-striped">
       
       		<thead>
